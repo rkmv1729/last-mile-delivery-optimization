@@ -1,0 +1,26 @@
+{
+    "model_name": "DemandLSTM",
+    "lookback": 12,
+    "input_size": 5,
+    "hidden_size": 64,
+    "num_layers": 2,
+    "output_size": 1,
+
+    "training_start_date": "2024-01-01",
+    "training_end_date": "2024-07-02",
+
+    "feature_columns": [
+        "day_index",
+        "shift",
+        "weekday",
+        "is_weekend",
+        "demand"
+    ],
+
+    "target_column": "demand",
+
+    "scaler_file": "demand_scaler.pkl",
+    "model_file": "best_demand_model.pth",
+
+    "version": "1.0"
+}

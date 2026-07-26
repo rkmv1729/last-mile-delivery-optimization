@@ -1,0 +1,459 @@
+2026-07-23 20:19:16,393 | INFO | Loading H3 demand data...
+2026-07-23 20:19:16,430 | INFO | Validating input...
+2026-07-23 20:19:16,433 | INFO | Computing demand statistics...
+2026-07-23 20:19:16,438 | INFO | Computing adaptive thresholds...
+2026-07-23 20:19:16,439 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 54, in main
+    sparse_threshold, hotspot_threshold = compute_thresholds(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2026-07-23 20:20:51,017 | INFO | Loading H3 demand data...
+2026-07-23 20:20:51,052 | INFO | Validating input...
+2026-07-23 20:20:51,056 | INFO | Computing demand statistics...
+2026-07-23 20:20:51,061 | INFO | Computing adaptive thresholds...
+2026-07-23 20:20:51,062 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:20:51,062 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 59, in main
+    neighbor_graph = build_neighbor_graph(
+                     ^^^^^^^^^^^^^^^^^^^^^
+TypeError: build_neighbor_graph() takes 1 positional argument but 2 were given
+2026-07-23 20:21:43,730 | INFO | Loading H3 demand data...
+2026-07-23 20:21:43,763 | INFO | Validating input...
+2026-07-23 20:21:43,766 | INFO | Computing demand statistics...
+2026-07-23 20:21:43,770 | INFO | Computing adaptive thresholds...
+2026-07-23 20:21:43,772 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:21:43,785 | INFO | Merging sparse cells...
+2026-07-23 20:21:43,785 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 63, in main
+    merge_plan = merge_sparse_cells(
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/merge.py", line 61, in merge_sparse_cells
+    if demand >= sparse_threshold:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'list' and 'str'
+2026-07-23 20:22:51,583 | INFO | Loading H3 demand data...
+2026-07-23 20:22:51,622 | INFO | Validating input...
+2026-07-23 20:22:51,627 | INFO | Computing demand statistics...
+2026-07-23 20:22:51,636 | INFO | Computing adaptive thresholds...
+2026-07-23 20:22:51,638 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:22:51,652 | INFO | Merging sparse cells...
+2026-07-23 20:22:51,652 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 63, in main
+    merge_plan = merge_sparse_cells(
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/merge.py", line 61, in merge_sparse_cells
+    if demand >= sparse_threshold:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'list' and 'str'
+2026-07-23 20:23:18,601 | INFO | Loading H3 demand data...
+2026-07-23 20:23:18,637 | INFO | Validating input...
+2026-07-23 20:23:18,640 | INFO | Computing demand statistics...
+2026-07-23 20:23:18,645 | INFO | Computing adaptive thresholds...
+2026-07-23 20:23:18,646 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:23:18,659 | INFO | Merging sparse cells...
+2026-07-23 20:23:18,660 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 63, in main
+    merge_plan = merge_sparse_cells(
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/merge.py", line 61, in merge_sparse_cells
+    if demand >= sparse_threshold:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'list' and 'str'
+2026-07-23 20:25:23,056 | INFO | Loading H3 demand data...
+2026-07-23 20:25:23,091 | INFO | Validating input...
+2026-07-23 20:25:23,094 | INFO | Computing demand statistics...
+2026-07-23 20:25:23,099 | INFO | Computing adaptive thresholds...
+2026-07-23 20:25:23,100 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:25:23,113 | INFO | Merging sparse cells...
+2026-07-23 20:25:23,113 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 63, in main
+    merge_plan = merge_sparse_cells(
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/merge.py", line 61, in merge_sparse_cells
+    if demand >= sparse_threshold:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'list' and 'int'
+2026-07-23 20:27:06,432 | INFO | Loading H3 demand data...
+2026-07-23 20:27:06,474 | INFO | Validating input...
+2026-07-23 20:27:06,479 | INFO | Computing demand statistics...
+2026-07-23 20:27:06,486 | INFO | Computing adaptive thresholds...
+2026-07-23 20:27:06,487 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:27:06,500 | INFO | Merging sparse cells...
+2026-07-23 20:27:06,501 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 943, in _cmp_method
+    result = pc_func(self._pa_array, self._box_pa(other))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pyarrow/compute.py", line 254, in wrapper
+    return func.call(args, None, memory_pool)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/_compute.pyx", line 405, in pyarrow._compute.Function.call
+  File "pyarrow/error.pxi", line 155, in pyarrow.lib.pyarrow_internal_check_status
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowNotImplementedError: Function 'greater_equal' has no kernel matching input types (large_string, int64)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 950, in _cmp_method
+    result[valid] = op(np_array[valid], other)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'str' and 'int'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 63, in main
+    merge_plan = merge_sparse_cells(
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/merge.py", line 61, in merge_sparse_cells
+    if demand >= sparse_threshold:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 62, in __ge__
+    return self._cmp_method(other, operator.ge)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 6735, in _cmp_method
+    res_values = ops.comparison_op(lvalues, rvalues, op)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/array_ops.py", line 341, in comparison_op
+    res_values = op(lvalues, rvalues)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 62, in __ge__
+    return self._cmp_method(other, operator.ge)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/string_arrow.py", line 591, in _cmp_method
+    result = super()._cmp_method(other, op)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 952, in _cmp_method
+    result = ops.invalid_comparison(self, other, op)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/invalid.py", line 55, in invalid_comparison
+    raise TypeError(f"Invalid comparison between dtype={left.dtype} and {typ}")
+TypeError: Invalid comparison between dtype=string and int
+2026-07-23 20:34:57,746 | INFO | Loading H3 demand data...
+2026-07-23 20:34:57,780 | INFO | Validating input...
+2026-07-23 20:34:57,783 | INFO | Computing demand statistics...
+2026-07-23 20:34:57,788 | INFO | Computing adaptive thresholds...
+2026-07-23 20:34:57,790 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:34:57,802 | INFO | Merging sparse cells...
+2026-07-23 20:34:57,803 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 943, in _cmp_method
+    result = pc_func(self._pa_array, self._box_pa(other))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pyarrow/compute.py", line 254, in wrapper
+    return func.call(args, None, memory_pool)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/_compute.pyx", line 405, in pyarrow._compute.Function.call
+  File "pyarrow/error.pxi", line 155, in pyarrow.lib.pyarrow_internal_check_status
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowNotImplementedError: Function 'greater_equal' has no kernel matching input types (large_string, int64)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 950, in _cmp_method
+    result[valid] = op(np_array[valid], other)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'str' and 'int'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 63, in main
+    merge_plan = merge_sparse_cells(
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/merge.py", line 61, in merge_sparse_cells
+    if demand >= sparse_threshold:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 62, in __ge__
+    return self._cmp_method(other, operator.ge)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 6735, in _cmp_method
+    res_values = ops.comparison_op(lvalues, rvalues, op)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/array_ops.py", line 341, in comparison_op
+    res_values = op(lvalues, rvalues)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 62, in __ge__
+    return self._cmp_method(other, operator.ge)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/string_arrow.py", line 591, in _cmp_method
+    result = super()._cmp_method(other, op)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 952, in _cmp_method
+    result = ops.invalid_comparison(self, other, op)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/invalid.py", line 55, in invalid_comparison
+    raise TypeError(f"Invalid comparison between dtype={left.dtype} and {typ}")
+TypeError: Invalid comparison between dtype=string and int
+2026-07-23 20:38:29,081 | INFO | Loading H3 demand data...
+2026-07-23 20:38:29,117 | INFO | Validating input...
+2026-07-23 20:38:29,120 | INFO | Computing demand statistics...
+2026-07-23 20:38:29,126 | INFO | Computing adaptive thresholds...
+2026-07-23 20:38:29,128 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 54, in main
+    sparse_threshold, hotspot_threshold = compute_thresholds(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2026-07-23 20:38:46,748 | INFO | Loading H3 demand data...
+2026-07-23 20:38:46,783 | INFO | Validating input...
+2026-07-23 20:38:46,788 | INFO | Computing demand statistics...
+2026-07-23 20:38:46,795 | INFO | Computing adaptive thresholds...
+2026-07-23 20:38:46,797 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 54, in main
+    sparse_threshold, hotspot_threshold = compute_thresholds(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2026-07-23 20:39:48,945 | INFO | Loading H3 demand data...
+2026-07-23 20:39:48,981 | INFO | Validating input...
+2026-07-23 20:39:48,985 | INFO | Computing demand statistics...
+2026-07-23 20:39:48,990 | INFO | Computing adaptive thresholds...
+2026-07-23 20:39:48,991 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:39:49,004 | INFO | Merging sparse cells...
+2026-07-23 20:39:49,006 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 943, in _cmp_method
+    result = pc_func(self._pa_array, self._box_pa(other))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pyarrow/compute.py", line 254, in wrapper
+    return func.call(args, None, memory_pool)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/_compute.pyx", line 405, in pyarrow._compute.Function.call
+  File "pyarrow/error.pxi", line 155, in pyarrow.lib.pyarrow_internal_check_status
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowNotImplementedError: Function 'greater_equal' has no kernel matching input types (large_string, int64)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 950, in _cmp_method
+    result[valid] = op(np_array[valid], other)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'str' and 'int'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 63, in main
+    merge_plan = merge_sparse_cells(
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/merge.py", line 61, in merge_sparse_cells
+    if demand >= sparse_threshold:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 62, in __ge__
+    return self._cmp_method(other, operator.ge)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 6735, in _cmp_method
+    res_values = ops.comparison_op(lvalues, rvalues, op)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/array_ops.py", line 341, in comparison_op
+    res_values = op(lvalues, rvalues)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 62, in __ge__
+    return self._cmp_method(other, operator.ge)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/string_arrow.py", line 591, in _cmp_method
+    result = super()._cmp_method(other, op)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 952, in _cmp_method
+    result = ops.invalid_comparison(self, other, op)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/invalid.py", line 55, in invalid_comparison
+    raise TypeError(f"Invalid comparison between dtype={left.dtype} and {typ}")
+TypeError: Invalid comparison between dtype=string and int
+2026-07-23 20:41:16,928 | INFO | Loading H3 demand data...
+2026-07-23 20:41:16,963 | INFO | Validating input...
+2026-07-23 20:41:16,966 | INFO | Computing demand statistics...
+2026-07-23 20:41:16,971 | INFO | Computing adaptive thresholds...
+2026-07-23 20:41:16,972 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:41:16,985 | INFO | Merging sparse cells...
+2026-07-23 20:41:16,988 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 943, in _cmp_method
+    result = pc_func(self._pa_array, self._box_pa(other))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pyarrow/compute.py", line 254, in wrapper
+    return func.call(args, None, memory_pool)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/_compute.pyx", line 405, in pyarrow._compute.Function.call
+  File "pyarrow/error.pxi", line 155, in pyarrow.lib.pyarrow_internal_check_status
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowNotImplementedError: Function 'greater_equal' has no kernel matching input types (large_string, int64)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 950, in _cmp_method
+    result[valid] = op(np_array[valid], other)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'str' and 'int'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 63, in main
+    merge_plan = merge_sparse_cells(
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/merge.py", line 67, in merge_sparse_cells
+    if demand >= sparse_threshold:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 62, in __ge__
+    return self._cmp_method(other, operator.ge)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 6735, in _cmp_method
+    res_values = ops.comparison_op(lvalues, rvalues, op)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/array_ops.py", line 341, in comparison_op
+    res_values = op(lvalues, rvalues)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 62, in __ge__
+    return self._cmp_method(other, operator.ge)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/string_arrow.py", line 591, in _cmp_method
+    result = super()._cmp_method(other, op)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 952, in _cmp_method
+    result = ops.invalid_comparison(self, other, op)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/invalid.py", line 55, in invalid_comparison
+    raise TypeError(f"Invalid comparison between dtype={left.dtype} and {typ}")
+TypeError: Invalid comparison between dtype=string and int
+2026-07-23 20:44:34,858 | INFO | Loading H3 demand data...
+2026-07-23 20:44:34,894 | INFO | Validating input...
+2026-07-23 20:44:34,897 | INFO | Computing demand statistics...
+2026-07-23 20:44:34,902 | INFO | Computing adaptive thresholds...
+2026-07-23 20:44:34,904 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:44:34,916 | INFO | Merging sparse cells...
+2026-07-23 20:44:34,919 | INFO | Splitting hotspot cells...
+2026-07-23 20:44:34,920 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 943, in _cmp_method
+    result = pc_func(self._pa_array, self._box_pa(other))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pyarrow/compute.py", line 254, in wrapper
+    return func.call(args, None, memory_pool)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/_compute.pyx", line 405, in pyarrow._compute.Function.call
+  File "pyarrow/error.pxi", line 155, in pyarrow.lib.pyarrow_internal_check_status
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowNotImplementedError: Function 'less' has no kernel matching input types (large_string, int64)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 950, in _cmp_method
+    result[valid] = op(np_array[valid], other)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '<' not supported between instances of 'str' and 'int'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 70, in main
+    split_plan = split_hotspot_cells(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/split.py", line 34, in split_hotspot_cells
+    if demand < hotspot_threshold:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 50, in __lt__
+    return self._cmp_method(other, operator.lt)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/series.py", line 6735, in _cmp_method
+    res_values = ops.comparison_op(lvalues, rvalues, op)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/array_ops.py", line 341, in comparison_op
+    res_values = op(lvalues, rvalues)
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 50, in __lt__
+    return self._cmp_method(other, operator.lt)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/string_arrow.py", line 591, in _cmp_method
+    result = super()._cmp_method(other, op)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/arrays/arrow/array.py", line 952, in _cmp_method
+    result = ops.invalid_comparison(self, other, op)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rkmv1729/last-mile-delivery-optimization/.venv/lib/python3.12/site-packages/pandas/core/ops/invalid.py", line 55, in invalid_comparison
+    raise TypeError(f"Invalid comparison between dtype={left.dtype} and {typ}")
+TypeError: Invalid comparison between dtype=string and int
+2026-07-23 20:46:12,403 | INFO | Loading H3 demand data...
+2026-07-23 20:46:12,438 | INFO | Validating input...
+2026-07-23 20:46:12,442 | INFO | Computing demand statistics...
+2026-07-23 20:46:12,447 | INFO | Computing adaptive thresholds...
+2026-07-23 20:46:12,448 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:46:12,461 | INFO | Merging sparse cells...
+2026-07-23 20:46:12,463 | INFO | Splitting hotspot cells...
+2026-07-23 20:46:12,465 | INFO | Constructing operational zones...
+2026-07-23 20:46:12,473 | INFO | Validating output...
+2026-07-23 20:46:12,475 | ERROR | AHSI pipeline failed.
+Traceback (most recent call last):
+  File "/home/rkmv1729/last-mile-delivery-optimization/ahsi/run.py", line 83, in main
+    validate_output(
+TypeError: validate_output() takes 1 positional argument but 2 were given
+2026-07-23 20:46:58,154 | INFO | Loading H3 demand data...
+2026-07-23 20:46:58,190 | INFO | Validating input...
+2026-07-23 20:46:58,194 | INFO | Computing demand statistics...
+2026-07-23 20:46:58,199 | INFO | Computing adaptive thresholds...
+2026-07-23 20:46:58,200 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:46:58,213 | INFO | Merging sparse cells...
+2026-07-23 20:46:58,216 | INFO | Splitting hotspot cells...
+2026-07-23 20:46:58,217 | INFO | Constructing operational zones...
+2026-07-23 20:46:58,226 | INFO | Validating output...
+2026-07-23 20:46:58,234 | INFO | Saving zone mapping...
+2026-07-23 20:46:58,241 | INFO | AHSI completed successfully in 0.09 seconds.
+2026-07-23 20:51:47,958 | INFO | Loading H3 demand data...
+2026-07-23 20:51:47,994 | INFO | Validating input...
+2026-07-23 20:51:47,998 | INFO | Computing demand statistics...
+2026-07-23 20:51:48,002 | INFO | Computing adaptive thresholds...
+2026-07-23 20:51:48,004 | INFO | Building H3 neighborhood graph...
+2026-07-23 20:51:48,016 | INFO | Merging sparse cells...
+2026-07-23 20:51:48,019 | INFO | Splitting hotspot cells...
+2026-07-23 20:51:48,020 | INFO | Constructing operational zones...
+2026-07-23 20:51:48,028 | INFO | Validating output...
+2026-07-23 20:51:48,036 | INFO | 835
+2026-07-23 20:51:48,037 | INFO | 920
+2026-07-23 20:51:48,037 | INFO | 70
+2026-07-23 20:51:48,037 | INFO | Merged groups: 155
+2026-07-23 20:51:48,037 | INFO | Split parents: 10
+2026-07-23 20:51:48,038 | INFO | 0
+2026-07-23 20:51:48,038 | INFO | Saving zone mapping...
+2026-07-23 20:51:48,043 | INFO | AHSI completed successfully in 0.08 seconds.
