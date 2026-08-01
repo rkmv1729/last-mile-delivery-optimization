@@ -12,3 +12,4 @@ shapely
 contextily
 streamlit
 folium
+pulp
