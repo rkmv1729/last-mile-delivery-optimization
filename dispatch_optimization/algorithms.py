@@ -1,6 +1,3 @@
-import numpy as np
-
-
 """
 algorithms.py
 
@@ -14,16 +11,7 @@ BUS-Based Dispatch Optimization
 """
 
 import pandas as pd
-
-from helpers import (
-    compute_retention_penalty,
-    compute_eps,
-    compute_batch_priority,
-    compute_vehicle_utilization,
-    compute_storage_pressure,
-    compute_forecast_opportunity,
-    compute_bus_score,
-)
+from dispatch_optimization.helpers import *
 
 from pulp import (
     LpProblem,
@@ -34,10 +22,11 @@ from pulp import (
     PULP_CBC_CMD,
 )
 
-VEHICLE_CAPACITY = 250
+
 
 def form_batches(
     orders_df: pd.DataFrame,
+    vehicle_capacity: int
 ) -> pd.DataFrame:
     """
     Algorithm 5:
@@ -142,7 +131,7 @@ def form_batches(
 
             if (
                 current_load + order.total_load
-                <= VEHICLE_CAPACITY
+                <= vehicle_capacity
             ):
 
                 current_orders.append(order)
@@ -177,6 +166,7 @@ def form_batches(
 
                 current_orders = [order]
                 current_quantity = order.total_quantity
+                current_load = order.total_load
 
         if current_orders:
 
@@ -213,7 +203,8 @@ def dispatch_batches(
     forecast_df,
     available_drivers: int,
     available_vehicles: int,
-    dispatch_centres_df
+    dispatch_centres_df,
+    vehicle_capacity
 ):
     """
     Algorithm 6:
@@ -236,7 +227,7 @@ def dispatch_batches(
 
         vehicle_utilization = compute_vehicle_utilization(
             batch.total_load,
-            VEHICLE_CAPACITY,
+            vehicle_capacity,
         )
 
         # ------------------------------------------
@@ -350,8 +341,6 @@ def dispatch_batches(
         )
     )
 
-    dispatch_df.to_csv("dispatch.csv")
-
     selected_batch_ids = dispatch_df.loc[
         dispatch_df["decision"] == "DISPATCH",
         "batch_id",
@@ -377,27 +366,3 @@ def dispatch_batches(
 
 
 
-def extract_retained_orders(
-    retained_batch_df: pd.DataFrame,
-) -> pd.DataFrame:
-    """
-    Extracts retained orders from retained batches.
-
-    Increments the retention cycle of every retained order
-    before returning them for the next dispatch cycle.
-    """
-    
-
-    retained_orders = []
-
-    for batch in retained_batch_df.itertuples():
-
-        for order in batch.orders:
-
-            order_dict = order._asdict()
-
-            order_dict["retention_cycles"] += 1
-
-            retained_orders.append(order_dict)
-
-    return pd.DataFrame(retained_orders)

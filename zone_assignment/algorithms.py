@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 from scipy.optimize import linear_sum_assignment
 
@@ -34,7 +33,11 @@ def hungarian_assignment(
             ]
         )
 
-    cost_matrix = -familiarity_matrix.to_numpy()
+    familiarity = familiarity_matrix.to_numpy(dtype=float)
+
+    max_familiarity = familiarity.max()
+
+    cost_matrix = max_familiarity - familiarity
 
     row_idx, col_idx = linear_sum_assignment(cost_matrix)
 

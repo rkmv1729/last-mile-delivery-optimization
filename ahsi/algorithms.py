@@ -1,6 +1,5 @@
 import pandas as pd
-import h3
-from helpers import *
+from ahsi.helpers import *
 
 # =============================================================
 
@@ -33,13 +32,12 @@ def initialize_seeds(
 
     # Highest demand cells are considered first
     sorted_cells = h3_demand_df.sort_values(
-        by="orders",
+        by="demand",
         ascending=False
     ).reset_index(drop=True)
 
     covered_cells = set()
     seeds = []
-    zone_id = 1
 
     for _, row in sorted_cells.iterrows():
 
@@ -54,7 +52,7 @@ def initialize_seeds(
         seeds.append({
             "zone_id": len(seeds) + 1,
             "seed_cell": cell,
-            "seed_orders": row["orders"]
+            "seed_orders": row["demand"]
         })
 
         covered_cells.update(
@@ -79,7 +77,7 @@ def grow_regions(
     h3_demand_df : pd.DataFrame
         Required columns:
             - h3_cell_8
-            - orders
+            - demand
 
     seed_df : pd.DataFrame
         Required columns:
@@ -99,7 +97,7 @@ def grow_regions(
     workload_map = dict(
         zip(
             h3_demand_df["h3_cell_8"],
-            h3_demand_df["orders"]
+            h3_demand_df["demand"]
         )
     )
 
@@ -205,7 +203,7 @@ def refine_boundaries(
     workload_map = dict(
         zip(
             h3_demand_df["h3_cell_8"],
-            h3_demand_df["orders"]
+            h3_demand_df["demand"]
         )
     )
 

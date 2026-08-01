@@ -18,21 +18,13 @@ Algorithm 6
 """
 
 import numpy as np
-import pandas as pd
-from math import radians, sin, cos, sqrt, atan2
+from config import (
+    BUS_WEIGHTS,
+    EPS_ALPHA,
+    RETENTION_PENALTY_INCREMENT,
+    MAX_PENALTY
+)
 
-BUS_WEIGHTS = {
-    "priority_score": 0.35,
-    "vehicle_utilization": 0.20,
-    "storage_pressure": 0.15,
-    "retention_penalty": 0.20,
-    "forecast_opportunity": 0.10,
-}
-
-EPS_ALPHA = 0.7
-EPS_BETA = 0.3
-MAX_PENALTY = 0.4
-RETENTION_PENALTY_INCREMENT = 0.1
 
 
 # ============================================================
@@ -60,7 +52,7 @@ def compute_eps(
     """
     return (
         EPS_ALPHA * priority_score
-        + EPS_BETA * retention_penalty
+        + (1-EPS_ALPHA) * retention_penalty
     )
 
 
@@ -82,7 +74,7 @@ def compute_batch_priority(
 
 
 def compute_vehicle_utilization(
-    batch_quantity: float,
+    batch_load: float,
     vehicle_capacity: float,
 ) -> float:
     """
@@ -92,7 +84,7 @@ def compute_vehicle_utilization(
     if vehicle_capacity <= 0:
         return 0.0
 
-    return min(batch_quantity / vehicle_capacity, 1.0)
+    return min(batch_load / vehicle_capacity, 1.0)
 
 
 def compute_storage_pressure(
@@ -152,126 +144,5 @@ def compute_bus_score(
 
 # ===================================================
 
-def recycle_retained_orders(
-    new_orders_df: pd.DataFrame,
-    retained_orders_df: pd.DataFrame,
-) -> pd.DataFrame:
-    """
-    Merges retained orders from the previous dispatch cycle
-    with newly arrived orders.
-    """
-
-    if retained_orders_df.empty:
-        return new_orders_df.copy()
-
-    return pd.concat(
-        [
-            retained_orders_df,
-            new_orders_df,
-        ],
-        ignore_index=True,
-    )
-
-# ===================================================
-
-def enrich_orders(
-    new_orders_df,
-    products_df,
-):
-    """
-    Add priority_score and load_factor to each product
-    inside every order.
-    """
-
-    product_lookup = (
-        products_df
-        .set_index("product_id")
-        [
-            [
-                "priority_score",
-                "load_factor",
-            ]
-        ]
-        .to_dict("index")
-    )
-
-    def enrich(products):
-
-        enriched = []
-
-        for product in products:
-
-            meta = product_lookup[
-                product["product_id"]
-            ]
-
-            enriched.append(
-                {
-                    **product,
-                    "priority_score": meta[
-                        "priority_score"
-                    ],
-                    "load_factor": meta[
-                        "load_factor"
-                    ],
-                }
-            )
-
-        return enriched
-
-    new_orders_df = new_orders_df.copy()
-
-    new_orders_df["products"] = (
-        new_orders_df["products"]
-        .apply(enrich)
-    )
-
-    return new_orders_df
 
 
-
-def haversine(lat1, lon1, lat2, lon2):
-    R = 6371.0
-
-    dlat = radians(lat2 - lat1)
-    dlon = radians(lon2 - lon1)
-
-    a = (
-        sin(dlat / 2) ** 2
-        + cos(radians(lat1))
-        * cos(radians(lat2))
-        * sin(dlon / 2) ** 2
-    )
-
-    return 2 * R * atan2(sqrt(a), sqrt(1 - a))
-
-
-
-def assign_dispatch_centers(
-    orders_df,
-    dispatch_centers_df,
-):
-    centers = dispatch_centers_df.to_dict("records")
-
-    dispatch_ids = []
-
-    for order in orders_df.itertuples():
-
-        nearest = min(
-            centers,
-            key=lambda dc: haversine(
-                order.delivery_gps_lat,
-                order.delivery_gps_lng,
-                dc["gps_lat"],
-                dc["gps_lng"],
-            ),
-        )
-
-        dispatch_ids.append(
-            nearest["dispatch_center_id"]
-        )
-
-    orders_df = orders_df.copy()
-    orders_df["dispatch_center_id"] = dispatch_ids
-
-    return orders_df

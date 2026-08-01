@@ -3,7 +3,7 @@ import pandas as pd
 
 def build_zone_familiarity(
     driver_familiarity_df: pd.DataFrame,
-    cell_mapping_df: pd.DataFrame,
+    zone_mapping_df: pd.DataFrame,
     aggregation: str = "mean"
 ) -> pd.DataFrame:
     """
@@ -28,7 +28,7 @@ def build_zone_familiarity(
     """
 
     df = driver_familiarity_df.merge(
-        cell_mapping_df,
+        zone_mapping_df,
         on="h3_cell_8",
         how="inner"
     )
@@ -103,10 +103,10 @@ def build_familiarity_matrix(
     )
 
 def prepare_inputs(
-    batch_df: pd.DataFrame,
+    selected_batches_df: pd.DataFrame,
     available_drivers_df: pd.DataFrame,
     driver_familiarity_df: pd.DataFrame,
-    cell_mapping_df: pd.DataFrame,
+    zone_mapping_df: pd.DataFrame,
     aggregation: str = "mean"
 ) -> pd.DataFrame:
     """
@@ -119,18 +119,18 @@ def prepare_inputs(
 
     familiarity = build_zone_familiarity(
         driver_familiarity_df,
-        cell_mapping_df,
+        zone_mapping_df,
         aggregation
-    )
-
-    familiarity = filter_active_zones(
-        familiarity,
-        batch_df
     )
 
     familiarity = filter_available_drivers(
         familiarity,
         available_drivers_df
+    )
+
+    familiarity = filter_active_zones(
+        familiarity,
+        selected_batches_df
     )
 
     return build_familiarity_matrix(familiarity)
