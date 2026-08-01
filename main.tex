@@ -1,0 +1,2359 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e} % Add to preamble if not present
+\usepackage{amsmath}
+\usepackage{booktabs} % For professional table formatting (\toprule, \midrule, \bottomrule)
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{subcaption} % Required in preamble
+\usepackage{tabularx}
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+\usepackage{xurl} % Enables automatic breaking of long URLs across lines
+
+
+% Define custom red color to match the image
+\definecolor{titlered}{RGB}{237, 28, 36}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    
+    % Header
+    {\color{titlered}\Large\textbf{SUMMER INTERNSHIP PROJECT REPORT}}
+    
+    \vspace{2.5cm}
+    
+    % Main Title
+    {\Huge\textbf{Project Title}} \\[0.4cm]
+    {\color{titlered}\Large An Adaptive Multi-Layer Decision Framework for Last-Mile Delivery Operations}
+    
+    \vspace{2.5cm}
+    
+    % Author Details
+    {\Large Shreyak Mitra} \\[0.3cm]
+    {\large B.E. in Computer Science and Engineering in \\ Jadavpur University} 
+    
+    \vspace{2cm}
+    
+    % Mentor & Period
+    {\large Project Guide / Mentor Name: Avijit Guha} \\[0.8cm]
+    {\large Period of Internship: 18\textsuperscript{th} May 2026 -- 31\textsuperscript{st} July 2026}
+    
+    \vspace{2cm}
+    
+    % Submission Details
+    {\Large Report submitted to: IDEAS -- Institute of Data Engineering, Analytics and Science Foundation, ISI Kolkata}
+
+\end{titlepage}
+
+\begin{abstract}
+Last-mile delivery is one of the most critical and operationally expensive stages of the supply chain, accounting for a significant portion of overall logistics costs while directly influencing delivery efficiency and customer satisfaction. Rapid fluctuations in order demand, uneven geographical distribution, inefficient resource allocation, and static delivery zones make it challenging for logistics providers to maintain high service levels while minimizing operational costs. Traditional dispatch systems often rely on fixed service regions and heuristic decision-making, which fail to adapt effectively to dynamic urban environments.
+
+This project presents an AI-enabled Last Mile Delivery Optimization Framework that integrates adaptive spatial partitioning, demand forecasting, dispatch optimization, and driver assignment into a unified decision-support system. The proposed framework begins by partitioning the operational area using the Adaptive H3 Spatial Indexing (AHSI) algorithm, which constructs balanced and contiguous operational zones through demand-aware seed initialization, simultaneous region growing, and iterative boundary refinement. Future demand is predicted using a Long Short-Term Memory (LSTM) network trained on historical spatio-temporal order data. These demand forecasts are incorporated into a multi-objective dispatch optimization layer that evaluates batch priority, vehicle utilization, storage utilization, retention cost, and future demand opportunities before making dispatch decisions. Finally, operational zones are assigned to delivery drivers using a familiarity-aware optimization strategy based on the Hungarian Algorithm, balancing historical driver familiarity with workload distribution.
+
+The framework is implemented in Python and evaluated using the real-world LaDe dataset for delivery operations. Since LaDe does not contain product-level inventory information, a synthetic product dataset was developed comprising product identifiers, product categories, product quantities, and manually assigned priority scores. This dataset supports the evaluation of batch formation and dispatch decision-making within the proposed framework.
+Experimental evaluation demonstrates the effectiveness of the proposed framework in generating balanced operational zones, forecasting short-term demand, supporting dispatch decision-making, and assigning drivers to operational zones. The modular architecture enables each optimization layer to operate independently while integrating seamlessly into an end-to-end simulation environment, making the proposed system suitable as both a research prototype and a foundation for intelligent last-mile delivery systems.
+
+\end{abstract}
+
+\newpage
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{Background and Motivation}
+\label{subsec:background_and_motivation}
+
+The rapid growth of e-commerce, online grocery platforms, and food delivery services has significantly increased the demand for efficient last-mile delivery systems. Last-mile delivery refers to the final stage of the logistics process, where products are transported from a local distribution facility to the customer's location. Although it covers the shortest geographical distance within the supply chain, it is often the most expensive and operationally challenging stage due to dynamic customer demand, traffic conditions, and resource constraints.
+
+Recent advances in artificial intelligence, machine learning, and spatial computing have enabled logistics providers to make data-driven operational decisions. These technologies offer opportunities to improve delivery efficiency through adaptive spatial partitioning, demand forecasting, intelligent dispatch planning, and optimized driver allocation. This project is motivated by the need to integrate these capabilities into a unified framework for last-mile delivery optimization.
+
+\subsection{Problem Statement}
+\label{subsec:problem_statement}
+
+Conventional last-mile delivery systems commonly rely on static service regions, rule-based dispatch policies, and availability-based driver assignment. Such approaches struggle to adapt to continuously changing demand patterns, often leading to workload imbalance, inefficient resource utilization, and increased delivery times.
+
+Furthermore, many existing optimization approaches address spatial partitioning, demand forecasting, dispatch planning, and driver assignment as independent problems. Since these operational decisions are inherently interconnected, optimizing them separately can reduce overall system efficiency. This highlights the need for an integrated framework capable of coordinating decisions across multiple operational layers.
+
+\subsection{Proposed Framework}
+\label{subsec:proposed_framework}
+
+This project proposes an AI-driven Last Mile Delivery Optimization Framework that integrates four key operational layers into a unified decision-making pipeline. The service area is first partitioned using the proposed Adaptive H3 Spatial Indexing (AHSI) algorithm to generate demand-aware operational zones. Historical delivery data is then used to forecast shift-wise demand through a Long Short-Term Memory (LSTM) network. These forecasts are incorporated into a multi-objective dispatch optimization module to support dispatch planning, while operational zones are assigned to drivers using a familiarity-aware optimization model based on the Hungarian Algorithm.
+
+The modular architecture enables information to flow between successive optimization layers, providing an adaptive and scalable framework for improving delivery efficiency under dynamic operating conditions.
+
+
+\subsection{Project Objectives}
+\label{subsec:project_objectives}
+The primary objective of this project is to develop an intelligent, AI-enabled framework for optimizing last-mile delivery operations by integrating adaptive spatial partitioning, demand forecasting, dispatch optimization, and driver assignment into a unified decision-support system. The framework aims to improve operational efficiency while maintaining scalability and adaptability in dynamic urban delivery environments.\\
+The specific objectives of the project are as follows:
+\begin{enumerate}
+    \item \textbf{Adaptive Spatial Partitioning:} To develop an adaptive spatial partitioning algorithm capable of dynamically generating operational delivery zones based on real-time demand distribution using the H3 hierarchical spatial indexing system.
+    
+    \item \textbf{Spatio-Temporal Demand Forecasting:} To forecast short-term delivery demand by designing a spatio-temporal prediction model using Long Short-Term Memory (LSTM) networks trained on historical delivery patterns.
+    
+    \item \textbf{Multi-Objective Dispatch Optimization:} To design a multi-objective dispatch optimization framework that evaluates delivery batches using operational metrics such as batch priority, vehicle utilization, storage pressure, retention cost, and forecasted demand opportunity before making dispatch decisions.
+    
+    \item \textbf{Familiarity-Aware Driver Assignment:} To optimize driver-zone assignment by maximizing historical driver familiarity while maintaining balanced workloads through a Hungarian Algorithm-based optimization approach.
+    
+    \item \textbf{System Integration:} To integrate all optimization layers into a modular end-to-end framework where information flows seamlessly between spatial partitioning, demand forecasting, dispatch optimization, and driver assignment.
+    
+    \item \textbf{Empirical Evaluation:} To evaluate the effectiveness of the proposed framework using real-world delivery datasets through experimental analysis and simulation, demonstrating improvements in operational decision-making.
+\end{enumerate}
+
+\newpage
+\section{Methodology}
+\label{sec:methodology}
+
+\subsection{Project Overview}
+\label{subsec:project_overview}
+
+The proposed last-mile delivery optimization framework adopts a modular architecture consisting of five operational layers: Adaptive H3 Spatial Indexing (AHSI), Demand Forecasting, Dispatch Optimization, Zone Assignment, and Event-Driven Simulation. Each layer performs a specific task while passing its output to subsequent layers, enabling an integrated and scalable decision-making pipeline. The methodology adopted for each layer is described in the following sections.
+
+\subsection{Dataset}
+\label{subsec:dataset}
+
+\subsubsection{LaDe Dataset}
+\label{subsubsec:lade_dataset}
+
+The proposed framework utilizes the Large-scale Delivery (LaDe) dataset, a real-world food delivery dataset containing customer orders, courier information, timestamps, and geographic coordinates. The spatial and temporal characteristics of the dataset make it suitable for developing and evaluating intelligent last-mile delivery optimization algorithms.
+
+For this study, delivery records were filtered to the Hangzhou metropolitan region. Customer locations were converted into H3 spatial indices to enable spatial aggregation and adaptive zone generation. The processed dataset serves as the primary data source for the proposed optimization framework.
+
+\begin{table}[htbp]
+\centering
+\caption{Key Attributes of the LaDe Dataset}
+\label{tab:lade_attributes}
+\begin{tabular}{ll}
+\hline
+\textbf{Attribute} & \textbf{Description} \\
+\hline
+Order ID & Unique identifier for each delivery order \\
+Courier ID & Identifier of the assigned courier \\
+Accept Timestamp & Order acceptance timestamp \\
+Latitude / Longitude & Customer delivery location \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Dataset Utilization}
+\label{subsubsec:dataset_utilization}
+
+Different optimization layers utilize different subsets of the processed dataset according to their functional requirements. Table~\ref{tab:lade_utilization} on next page outlines the specific data inputs required across each layer.
+
+\begin{table}[htbp]
+\centering
+\caption{Utilization of the LaDe Dataset}
+\label{tab:lade_utilization}
+\begin{tabularx}{0.65\textwidth}{>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\hline
+\textbf{Framework Module} & \textbf{Primary Data Utilized} \\ 
+\hline
+Adaptive H3 Spatial Indexing & H3 cell indices, order counts \\ \\
+Demand Forecasting & Shift-wise demand observations \\ \\
+Dispatch Optimization & Current demand, forecasted demand, operational metrics \\ \\
+Zone Assignment & Zone demand, courier history \\ \\
+Simulation Engine & Orders, zones, assignments, dispatch decisions \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Data Preprocessing and Feature Engineering}
+\label{subsec:data_preprocessing_and_feature_engineering}
+
+The raw delivery records were transformed into a standardized operational dataset through preprocessing and feature engineering. Records with incomplete spatial or temporal information were removed to ensure data consistency.
+
+Customer coordinates were converted into H3 spatial indices, enabling efficient spatial aggregation and demand-based zone generation. From the order acceptance timestamp, temporal features including shift identifier, day of the week, weekend indicator, and chronological day index were extracted.
+
+To support demand forecasting, orders were aggregated into shift-wise demand observations for each H3 cell, producing a structured time-series dataset for LSTM training. The resulting operational dataset provides a consistent representation that supplies the required features to each optimization layer, as summarized in Table~\ref{tab:feature_engineering_summary} on next page.
+
+% Add \usepackage{tabularx} in your document preamble if not already present
+\begin{table}[htbp]
+\centering
+\caption{Feature Engineering Summary}
+\label{tab:feature_engineering_summary}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\hline
+\textbf{Feature Category} & \textbf{Features Generated} & \textbf{Purpose} \\
+\hline
+Spatial Features & Latitude, Longitude, H3 Cell Indices (Res. 7--10) & Spatial aggregation, adaptive zoning, and location indexing \\ \\
+Temporal Features & Hour, Shift ID, Day of Week, $\sin(\text{Day of Week})$, $\cos(\text{Day of Week})$, Is Weekend, Day Index, $\sin(\text{Shift})$, $\cos(\text{Shift})$ & Capture temporal demand patterns for forecasting \\ \\
+Demand Features & Shift-wise Demand & Time-series demand forecasting and dispatch optimization \\ \\
+Operational Features & Order ID, Courier ID, Accept Timestamp & Driver history, assignment, and simulation \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Experimental Methodology}
+\label{subsec:experimental_methodology}
+
+Each optimization layer of the proposed framework was evaluated independently before integration into the complete pipeline. This modular evaluation approach enabled the performance of individual algorithms to be assessed using metrics appropriate to their respective objectives.
+
+The framework was implemented in Python using Google Colaboratory and Visual Studio Code. Data processing and model development were carried out using Pandas, NumPy, Scikit-learn, PyTorch, Matplotlib, and the H3 geospatial library.
+
+The evaluation methodology adopted for each layer is summarized in Table~\ref{tab:evaluation_methodology} on next page. Experimental results for each optimization layer are presented alongside the corresponding methodology sections to facilitate direct comparison between the proposed algorithms and their observed performance.
+
+\begin{table}[htbp]
+\centering
+\caption{Evaluation Methodology}
+\label{tab:evaluation_methodology}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.25\textwidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\hline
+\textbf{Optimization Layer} & \textbf{Evaluation Methodology} & \textbf{Performance Metrics} \\
+\hline
+Adaptive H3 Spatial Indexing & Analysis of adaptive zone generation & Zone statistics, demand distribution, runtime \\ \\
+Demand Forecasting & Comparison of predicted and actual demand & MAE, RMSE, $R^2$ \\ \\
+Dispatch Optimization & Evaluation under representative scenarios & Vehicle utilization, dispatch decisions \\ \\
+Zone Assignment & Assessment of driver allocation & Familiarity score, workload balance \\ \\
+Simulation Engine & End-to-end execution of integrated framework & Functional validation \\
+\hline
+\end{tabularx}
+\end{table}
+
+
+
+\newpage
+
+\section{Adaptive H3 Spatial Indexing (AHSI)}
+\subsection{Layer Overview}
+\label{subsec:ahsi_layer_overview}
+
+The Adaptive H3 Spatial Indexing (AHSI) layer partitions the delivery service area into contiguous operational zones to optimize downstream driver allocation. Operating between demand aggregation and the Zone Assignment Layer, AHSI converts H3 Resolution-8 shift-wise demand observations into spatial zones tailored to the number of available couriers.
+
+By balancing aggregated demand across these generated zones, AHSI provides complete spatial coverage of the service region while minimizing workload variance prior to driver-zone assignment.
+
+\subsection{AHSI Workflow}
+\label{subsubsec:ahsi_workflow}
+
+The workflow of the AHSI layer, illustrated in Figure~\ref{fig:ahsi_workflow} on next page, begins by calculating a target workload per operational zone based on total shift demand and available driver capacity. Spatially distributed seed cells are initialized, triggering a simultaneous, adaptive region-growing process to construct contiguous zones. Once all cells are assigned, an iterative boundary refinement stage applies localized adjustments to further minimize workload variance across the partitioned network.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    node distance=1.2cm and 2cm,
+    block/.style={
+        rectangle, 
+        draw=black!80, 
+        fill=blue!5, 
+        thick, 
+        text width=5.5cm, 
+        align=center, 
+        rounded corners=3pt, 
+        minimum height=0.9cm,
+        font=\small
+    },
+    line/.style={
+        draw=black!75, 
+        -stealth, 
+        thick
+    }
+]
+
+    % Nodes
+    \node [block] (input) {Shift-wise H3-8 Demand Data};
+    \node [block, below=of input] (driver) {Historical Driver Analysis\\(Expected Driver Count $K$)};
+    \node [block, below=of driver] (target) {Compute Target Workload\\($W_t$)};
+    \node [block, below=of target] (seeds) {Spatially Distributed\\Seed Initialization};
+    \node [block, below=of seeds] (growing) {Simultaneous Adaptive\\Region Growing};
+    \node [block, below=of growing] (refine) {Iterative Boundary\\Refinement};
+    \node [block, below=of refine] (zones) {Balanced Operational Zones\\(Exactly $K$ Zones)};
+    \node [block, fill=gray!10, below=of zones] (output) {Zone Assignment Layer};
+
+    % Paths
+    \path [line] (input) -- (driver);
+    \path [line] (driver) -- (target);
+    \path [line] (target) -- (seeds);
+    \path [line] (seeds) -- (growing);
+    \path [line] (growing) -- (refine);
+    \path [line] (refine) -- (zones);
+    \path [line] (zones) -- (output);
+
+\end{tikzpicture}
+\caption{Workflow of the Adaptive H3 Spatial Indexing (AHSI) Layer}
+\label{fig:ahsi_workflow}
+\end{figure}
+
+
+\subsection{Exploratory Data Analysis and Design Decisions}
+\label{subsec:ahsi_eda_design_decisions}
+
+Prior to designing the AHSI layer, an exploratory analysis of the preprocessed Hangzhou LaDe dataset was conducted to determine optimal spatial granularity and parameterize operational zoning.
+
+\subsubsection{Operational Dataset Overview}
+\label{subsubsec:operational_dataset_overview}
+
+The dataset spans 184 operational days in Hangzhou, capturing $1,776,101$ orders fulfilled by $1,322$ unique couriers, averaging $391.55$ active drivers daily (Table~\ref{tab:operational_dataset_summary}). As shown in Figure~\ref{fig:daily_orders_distribution} on page 9, temporal demand fluctuates significantly across the observation period, demonstrating the necessity of dynamic, adaptive zoning over static boundary partitions.
+
+\begin{table}[htbp]
+\centering
+\caption{Operational Dataset Summary}
+\label{tab:operational_dataset_summary}
+\begin{tabularx}{0.65\textwidth}{>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+Total Orders & 1,776,101 \\
+Operational Days & 184 \\
+Unique Couriers & 1,322 \\
+Average Active Drivers / Day & 391.55 \\
+Study Region & Hangzhou \\
+\hline
+\end{tabularx}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{daily_orders_demand.png}
+\caption{Daily Orders Distribution Across the Operational Period}
+\label{fig:daily_orders_distribution}
+\end{figure}
+
+\subsubsection{H3 Resolution Analysis}
+\label{subsubsec:h3_resolution_analysis}
+
+Customer delivery locations were evaluated across H3 spatial resolutions 6 through 10 to balance spatial precision against computational efficiency. Table~\ref{tab:avg_occupied_h3_cells} and Figure~\ref{fig:avg_occupied_h3_cells} on next page illustrate the relationship between grid resolution and active spatial unit count. While lower resolutions ($6$--$7$) oversmooth localized demand features, higher resolutions ($9$--$10$) exponentially increase the cell count, inducing sparse spatial matrices and unnecessary algorithmic overhead.
+
+\begin{table}[htbp]
+\centering
+\caption{Average Occupied H3 Cells Across Resolutions}
+\label{tab:avg_occupied_h3_cells}
+\begin{tabularx}{0.65\textwidth}{>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\hline
+\textbf{H3 Resolution} & \textbf{Average Occupied Cells} \\
+\hline
+6 & 188.79 \\
+7 & 600.79 \\
+8 & 1,611.91 \\
+9 & 3,528.85 \\
+10 & 6,579.23 \\
+\hline
+\end{tabularx}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{mean_occupied_cells_per_h3_resolution.png}
+\caption{Average Occupied H3 Cells Across H3 Resolutions}
+\label{fig:avg_occupied_h3_cells}
+\end{figure}
+
+\subsubsection{Design Decisions}
+\label{subsubsec:ahsi_design_decisions}
+
+Based on the empirical findings, H3 Resolution-8 ($\approx 1,612$ active cells per shift) was selected as the atomic spatial unit for the AHSI layer. Resolution-8 maintains fine-grained spatial demand resolution while retaining contiguous hexagonal adjacency required for seed expansion and boundary refinement. Rather than relying on rigid geometric boundaries, AHSI dynamically scales the target number of operational zones $K$ directly to expected courier availability, ensuring that spatial partitioning adapts simultaneously to shift demand volume and workforce capacity.
+
+\subsection{Proposed AHSI Model}
+\subsubsection{Problem Formulation}
+\label{subsubsec:ahsi_problem_formulation}
+
+Unlike conventional spatial clustering methods that focus solely on geometric proximity, the AHSI algorithm formulates operational zoning as a constrained graph partitioning problem designed to minimize driver workload imbalance.
+
+Let $\mathcal{H} = \{h_1, h_2, \dots, h_n\}$ denote the set of H3 Resolution-8 cells covering the delivery region, where each cell $h_i$ carries an aggregated shift demand workload $w_i$. Given an expected courier count $K$, the algorithm partitions $\mathcal{H}$ into exactly $K$ contiguous operational zones, $\mathcal{Z} = \{Z_1, Z_2, \dots, Z_K\}$.
+
+The ideal target workload per driver $W_t$ is defined as:
+$$
+W_t = \frac{\sum_{i=1}^{n} w_i}{K}
+$$
+
+The total workload $W_j$ assigned to zone $Z_j$ is given by $W_j = \sum_{h_i \in Z_j} w_i$. Consequently, the partitioning objective minimizes the sum of squared workload deviations across all $K$ zones:
+$$
+\min_{\mathcal{Z}} \sum_{j=1}^{K} (W_j - W_t)^2
+$$
+
+Subject to the following operational constraints:
+*   **Partition Completeness:** $\bigcup_{j=1}^{K} Z_j = \mathcal{H}$ and $Z_a \cap Z_b = \emptyset, \; \forall a \neq b$.
+*   **Non-empty Assignment:** $|Z_j| \ge 1, \; \forall j \in \{1, \dots, K\}$.
+*   **Spatial Contiguity:** The subgraph induced by the H3 adjacency graph for each zone $Z_j$ must remain connected.
+*   **Monotonic Refinement:** Boundary exchanges are strictly accepted if and only if they reduce global workload variance without violating spatial contiguity.
+
+\subsubsection{Seed Initialization}
+\label{subsubsec:ahsi_seed_initialization}
+
+The initial stage of the AHSI algorithm establishes $K$ seed cells to serve as the spatial origin points for operational zone growth. Because selecting top-demand cells outright risk clustering multiple seeds within a single high-density hotspot, AHSI adopts a demand-aware, spatially distributed selection strategy using the underlying H3 hexagonal neighborhood graph.
+
+All candidate cells $h_i \in \mathcal{H}$ are first sorted in descending order of workload $w_i$. The highest-demand cell is designated as the first seed $s_1$. Subsequent seeds $s_j$ ($j = 2, \dots, K$) are iteratively selected from the ordered candidate list provided they satisfy a minimum topological graph distance $d_g(s_j, s_m) \ge \delta_{\min}$ from all previously chosen seeds $s_m$ ($m < j$). This spatial suppression mechanism prevents seed concentration in localized demand peaks, ensuring uniform geographical coverage across the delivery service region and providing a balanced baseline for the region-growing phase.
+
+\begin{algorithm}[htbp]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+
+\Input{
+    Set of H3 cells $\mathcal{H}$;\\
+    Cell workload function $w(h), \forall h \in \mathcal{H}$;\\
+    Number of zones $K$;\\
+    Minimum topological graph distance $d_{\min}$
+}
+\Output{
+    Seed set $\mathcal{S}$
+}
+
+\BlankLine
+Sort $\mathcal{H}$ in descending order of workload $w(h)$\;\\
+Initialize $\mathcal{S} \leftarrow \{h_1\}$, where $h_1$ is the highest-demand cell\;
+
+\For{each candidate cell $h \in \mathcal{H} \setminus \mathcal{S}$}{
+    \If{$|\mathcal{S}| = K$}{
+        \textbf{break}\;
+    }
+    \If{$\min_{s \in \mathcal{S}} d_g(h, s) \ge d_{\min}$}{
+        $\mathcal{S} \leftarrow \mathcal{S} \cup \{h\}$\;
+    }
+}
+
+\Return{$\mathcal{S}$}\;
+\caption{AHSI Seed Initialization}
+\label{alg:ahsi_seed_initialization}
+\end{algorithm}
+
+\subsubsection{Simultaneous Region Growing}
+\label{subsubsec:ahsi_simultaneous_region_growing}
+
+Following seed initialization, operational zones are constructed via a simultaneous, multi-seed region-growing process. Beginning at seeds $\mathcal{S}$, zones grow concurrently by evaluating unassigned H3 Resolution-8 cells along their current topological boundaries.
+
+At each expansion iteration, each active zone identifies its set of adjacent unassigned candidate cells. The algorithm evaluates candidate additions by computing the resulting global workload imbalance:
+$$
+\Delta \text{Imbalance} = \sum_{j=1}^{K} (W_j + w_{\text{candidate}} - W_t)^2 - \sum_{j=1}^{K} (W_j - W_t)^2
+$$
+
+The single cell-to-zone assignment yielding the optimal reduction in workload deviation is executed. Restricting expansion exclusively to immediate H3 neighbors guarantees spatial contiguity throughout zone construction. Furthermore, simultaneous growth prevents high-demand seed regions from monopolizing neighboring cells, preventing spatial starvation of adjacent zones and establishing a balanced global partition before boundary refinement. The expansion continues iteratively until $\bigcup_{j=1}^{K} Z_j = \mathcal{H}$.
+
+\begin{algorithm}[H]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+
+\Input{
+    Seed set $\mathcal{S}$;\\
+    H3 spatial graph $G(V, E)$;\\
+    Cell workload function $w(h), \forall h \in V$
+}
+\Output{
+    Initial operational zones $\mathcal{Z} = \{Z_1, Z_2, \dots, Z_K\}$
+}
+
+\BlankLine
+Initialize $Z_j \leftarrow \{s_j\}$ for each seed $s_j \in \mathcal{S}$\;
+Mark all seed cells in $\mathcal{S}$ as assigned\;
+Initialize set of unassigned cells $U \leftarrow V \setminus \mathcal{S}$\;
+
+\While{$U \neq \emptyset$}{
+    Initialize best candidate selection $(h^*, Z^*) \leftarrow (\text{null}, \text{null})$\;
+    Initialize min global imbalance reduction $\Delta_{\min} \leftarrow \infty$\;
+    
+    \For{each zone $Z_j \in \mathcal{Z}$}{
+        Identify adjacent unassigned neighbors $N(Z_j) = \{h \in U \mid \exists u \in Z_j, (u, h) \in E\}$\;
+        \For{each candidate cell $h \in N(Z_j)$}{
+            Evaluate global workload imbalance $\Delta(h, Z_j)$ if $h$ were assigned to $Z_j$\;
+            \If{$\Delta(h, Z_j) < \Delta_{\min}$}{
+                $\Delta_{\min} \leftarrow \Delta(h, Z_j)$\;
+                $(h^*, Z^*) \leftarrow (h, Z_j)$\;
+            }
+        }
+    }
+    
+    Assign $h^*$ to zone $Z^*$: $Z^* \leftarrow Z^* \cup \{h^*\}$\;
+    Update unassigned set: $U \leftarrow U \setminus \{h^*\}$\;
+}
+
+\Return{$\mathcal{Z}$}\;
+\caption{AHSI Simultaneous Region Growing}
+\label{alg:ahsi_simultaneous_region_growing}
+\end{algorithm}
+
+\subsubsection{Boundary Refinement}
+\label{subsubsec:ahsi_boundary_refinement}
+
+Although simultaneous region growing yields complete spatial coverage, local workload variance often persists near zone perimeters. To optimize partition quality, AHSI executes an iterative local boundary refinement process across shared zone interfaces.
+
+Refinement is restricted to boundary cells $\mathcal{B} = \{h \in Z_a \mid \exists v \in Z_b \text{ s.t. } (h, v) \in E, \; a \neq b\}$. For each boundary cell $h \in Z_a$, transferring $h$ to an adjacent neighbor zone $Z_b$ is evaluated under two strict topological and objective criteria:
+\begin{enumerate}
+    \item \textbf{Contiguity Preservation:} The induced subgraph $G[Z_a \setminus \{h\}]$ must remain fully connected to preserve the spatial integrity of the source zone.
+    \item \textbf{Strict Objective Improvement:} The global workload imbalance following transfer must strictly decrease:
+    $$
+    \sum_{j \in \{a, b\}} (W_j' - W_t)^2 < \sum_{j \in \{a, b\}} (W_j - W_t)^2
+    $$
+\end{enumerate}
+
+During each iteration, all candidate boundary transfers across all interfaces are evaluated, and the single reassignment yielding the maximum global variance reduction is executed. The procedure terminates when no feasible boundary reassignment strictly improves the objective function, yielding a stable, locally optimal spatial partition $\mathcal{Z}^*$ ready for downstream driver allocation.
+
+\begin{algorithm}[htbp]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+
+\Input{
+    Initial operational zones $\mathcal{Z} = \{Z_1, Z_2, \dots, Z_K\}$;\\
+    H3 spatial graph $G(V, E)$;\\
+    Cell workload function $w(h), \forall h \in V$
+}
+\Output{
+    Refined operational zones $\mathcal{Z}^*$
+}
+
+\BlankLine
+\Repeat{\textbf{not} $\text{improvement}$}{
+    $\text{improvement} \leftarrow \text{false}$\;
+    Initialize best boundary transfer $(h^*, Z_{\text{src}}^*, Z_{\text{dst}}^*) \leftarrow (\text{null}, \text{null}, \text{null})$\;
+    Initialize min imbalance reduction $\Delta_{\min} \leftarrow 0$\;
+    
+    Identify all boundary cells $\mathcal{B} \leftarrow \{h \in Z_a \mid \exists v \in Z_b, (h, v) \in E, a \neq b\}$\;
+    
+    \For{each boundary cell $h \in \mathcal{B}$ with current zone $Z_a$}{
+        \If{$G[Z_a \setminus \{h\}]$ is connected}{
+            \For{each adjacent zone $Z_b$ sharing an edge with $h$}{
+                Evaluate workload imbalance change $\Delta(h, Z_a \to Z_b)$\;
+                \If{$\Delta(h, Z_a \to Z_b) < \Delta_{\min}$}{
+                    $\Delta_{\min} \leftarrow \Delta(h, Z_a \to Z_b)$\;
+                    $(h^*, Z_{\text{src}}^*, Z_{\text{dst}}^*) \leftarrow (h, Z_a, Z_b)$\;
+                }
+            }
+        }
+    }
+    
+    \If{$h^* \neq \text{null}$}{
+        Reassign $h^*$: $Z_{\text{src}}^* \leftarrow Z_{\text{src}}^* \setminus \{h^*\}$ and $Z_{\text{dst}}^* \leftarrow Z_{\text{dst}}^* \cup \{h^*\}$\;
+        $\text{improvement} \leftarrow \text{true}$\;
+    }
+}
+
+\Return{$\mathcal{Z}$}\;
+\caption{AHSI Boundary Refinement}
+\label{alg:ahsi_boundary_refinement}
+\end{algorithm}
+
+\subsubsection{Computational Complexity}
+\label{subsubsec:ahsi_computational_complexity}
+
+Let $N = \vert{}\mathcal{H}\vert{}$ denote the number of active H3 Resolution-8 cells and $K$ represent the target number of operational zones ($K \ll N$). The computational complexity of the AHSI algorithm is evaluated across its three sequential stages:
+
+\begin{enumerate}
+    \item \textbf{Seed Initialization:} Sorting candidate cells by workload requires $\mathcal{O}(N \log N)$ time. Topological graph distance checks are restricted to candidate seed evaluation, adding $\mathcal{O}(K \cdot N)$ overhead in the worst case.
+    \item \textbf{Simultaneous Region Growing:} Each cell is assigned exactly once. Since hexagonal H3 cells have a fixed degree bound ($d \le 6$), evaluating neighboring expansion candidates occurs in constant time, yielding an overall execution complexity of $\mathcal{O}(N)$.
+    \item \textbf{Boundary Refinement:} Local transfers are restricted exclusively to boundary cells $\mathcal{B} \subset \mathcal{H}$. Because refinement rapidly converges in practice within a small number of localized iterations $I$, the average-case runtime is bounded by $\mathcal{O}(I \cdot \vert{}\mathcal{B}\vert{}) \approx \mathcal{O}(N)$.
+\end{enumerate}
+
+Thus, the overall computational complexity of AHSI is dominated by the initial candidate sorting stage:
+$$\mathcal{O}(N \log N)$$
+This near-linear complexity enables scalable real-time execution across large metropolitan delivery areas.
+
+\subsection{Experimental Results and Discussions}
+\subsubsection{Sensitivity Analysis of the Number of Operational Zones}
+\label{sec:zone_sensitivity_analysis}
+
+To evaluate the robustness of the proposed Adaptive H3 Spatial Indexing (AHSI) algorithm, a sensitivity analysis was conducted by varying the target number of operational zones ($K$) while keeping all other algorithmic parameters fixed. The objective was to identify a configuration that provides an effective balance between workload distribution and spatial granularity. The evaluation was performed on a dataset consisting of $1,426$ active H3 cells, where each experiment generated a distinct number of operational zones under identical demand distributions.
+
+
+\begin{table}[H]
+\centering
+\caption{Sensitivity Analysis of AHSI with Different Target Numbers of Zones}
+\label{tab:ahsi_sensitivity}
+\small
+
+% Upper Table: Spatial & Ideal Metrics
+\begin{tabular}{cccc}
+\toprule
+\textbf{Target Zones} & \textbf{Mean Cells / Zone} & \textbf{Ideal Workload} & \textbf{Workload Imbalance} \\
+\midrule
+15 & 95.07 & 495.53 & 563 \\
+25 & 57.04 & 297.32 & 213 \\
+35 & 40.74 & 212.37 & 198 \\
+40 & 35.65 & 185.82 & 242 \\
+45 & 31.69 & 165.18 & 251 \\
+\bottomrule
+\end{tabular}
+
+\vspace{1.2em}
+
+% Lower Table: Dispersion & Imbalance Metrics
+\begin{tabular}{ccccc}
+\toprule
+\textbf{Target Zones} & \textbf{Std. Workload} & \textbf{Min Workload} & \textbf{Max Workload}  \\
+\midrule
+15 & 143.74 & 442 & 1005 \\
+25 & 68.05  & 240 & 453  \\
+35 & 57.66  & 167 & 365  \\
+40 & 65.65  & 126 & 368  \\
+45 & 63.57  & 114 & 365  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+% Row 1
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{workload_Std_dev.png}
+    \caption{Workload Standard Deviation}
+    \label{fig:std_workload}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{workload_imbalance.png}
+    \caption{Workload Imbalance}
+    \label{fig:workload_imbalance}
+\end{subfigure}
+
+\vspace{1em} % Vertical spacing between rows
+
+% Row 2
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{workload_imbalance.png}
+    \caption{Mean H3 Cells}
+    \label{fig:mean_cells}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{max_workload_ahsi.png}
+    \caption{Max Workload}
+    \label{fig:max_workload}
+\end{subfigure}
+
+\caption{Sensitivity Analysis of AHSI evaluation metrics across varying operational zone counts.}
+\label{fig:ahsi_sensitivity_grid}
+\end{figure}
+
+\subsubsection{Discussions}
+The results demonstrate that the number of operational zones has a significant impact on workload balancing performance:
+\begin{itemize}
+    \item \textbf{Coarse Partitioning ($K = 15$):} With only $15$ operational zones, the algorithm produced large regions containing dense demand clusters, resulting in a maximum workload of $1,005$ orders and a workload imbalance of $563$ orders. This indicates that coarse partitioning is insufficient for separating high-demand urban hotspots.
+    \item \textbf{Intermediate Partitioning ($K = 25$):} Increasing the number of operational zones to $25$ substantially improved workload distribution. The workload standard deviation decreased by more than $52\%$, while the workload imbalance dropped from $563$ to $213$ orders, confirming that major demand hotspots were successfully partitioned into smaller operational regions.
+    \item \textbf{Optimal Configuration ($K = 35$):} The best overall performance was achieved with $35$ operational zones, which yielded the lowest workload standard deviation ($57.66$) and the smallest workload imbalance ($198$ orders). At this configuration, the algorithm achieved the best compromise between balanced workloads and spatial compactness, maintaining operationally meaningful zone sizes averaging approximately $41$ H3 cells per zone.
+    \item \textbf{Over-Partitioning ($K \ge 40$):} Further increasing the number of zones to $40$ and $45$ did not yield additional improvements. Instead, workload variation increased slightly despite finer spatial partitioning. This behavior suggests that dominant demand hotspots had already been effectively isolated, while further subdivision primarily fragmented low-demand sparse regions, leading to diminishing operational returns.
+\end{itemize}
+
+\subsubsection{Key Findings}
+\begin{itemize}
+    \item The evaluation on $1,426$ active H3 cells confirms that increasing the target zone count initially balances workload by dispersing large demand concentrations.
+    \item The \textbf{$35$-zone configuration} achieved optimal stability across all metrics: lowest standard deviation ($57.66$), lowest workload imbalance ($198$ orders), and balanced spatial granularity ($\approx 40.74$ cells/zone).
+    \item Beyond $35$ zones, performance hits diminishing returns as additional boundaries fragment sparse regions without altering dense demand clusters.
+\end{itemize}
+
+Consequently, $35$ operational zones were selected as the default configuration for all subsequent experiments in this work.
+
+\begin{figure}[H]
+\centering
+% Placeholder for Hangzhou Operational Zones Map
+\includegraphics[width=\textwidth]{ahsi_zones_hangzhou.png}
+\caption{AHSI Operational Zones}
+\label{fig:hangzhou_zones}
+\end{figure}
+
+Figure~\ref{fig:hangzhou_zones} Operational zones generated by the proposed Adaptive H3 Spatial Indexing (AHSI) algorithm for Hangzhou. Each color represents a unique operational zone formed by merging adjacent H3 cells based on spatial adjacency and demand characteristics. The resulting zones exhibit spatial continuity while adapting their sizes to the underlying demand distribution, providing balanced operational regions for downstream demand forecasting, zone assignment, and dispatch optimization.
+
+
+\newpage
+\section{Spatio-Temporal Demand Forecast}
+\subsection{Layer Overview}
+
+The demand forecasting layer predicts customer demand for the next operational shift, enabling proactive batch formation, vehicle allocation, and dispatch planning. Demand is first predicted for individual H3 cells to preserve localized spatial variations and subsequently aggregated into the operational zones generated by the AHSI layer.
+
+An LSTM (Long Short-Term Memory) network is employed to capture temporal demand patterns from historical delivery data. The resulting zone-level demand forecasts provide an estimate of future workload and serve as the primary input to the dispatch optimization layer.
+
+
+\subsection{Demand Forecasting Workflow}
+The workflow of the proposed demand forecasting layer is illustrated in Figure~\ref{fig:demand_forecasting_workflow}. Historical delivery records are aggregated into shift-wise demand for each H3 cell, from which temporal features and sequential training samples are generated using a fixed lookback window. These sequences are used to train the LSTM model to predict demand for the next operational shift. The resulting cell-level forecasts are then aggregated into the operational zones generated by the AHSI layer and forwarded to the dispatch optimization module.
+
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    node distance=1.1cm,
+    block/.style={
+        draw, 
+        rectangle, 
+        rounded corners=2pt, 
+        fill=blue!5, 
+        draw=blue!40, 
+        thick, 
+        text width=6cm, 
+        align=center, 
+        minimum height=0.7cm,
+        font=\small
+    },
+    arrow/.style={
+        -Stealth, 
+        thick, 
+        draw=gray!80
+    }
+]
+
+% Nodes
+\node (node1) [block] {Historical Delivery Orders};
+\node (node2) [block, below=of node1] {Aggregate Demand per H3 Cell};
+\node (node3) [block, below=of node2] {Shift-wise Demand Dataset};
+\node (node4) [block, below=of node3] {Temporal Feature Engineering};
+\node (node5) [block, below=of node4] {Sequence Generation (Lookback)};
+\node (node6) [block, below=of node5] {LSTM Model Training};
+\node (node7) [block, below=of node6] {Predict Next Shift Demand};
+\node (node8) [block, below=of node7] {Aggregate Predictions to Zones};
+\node (node9) [block, below=of node8] {Dispatch Optimization Layer};
+
+% Arrows
+\draw [arrow] (node1) -- (node2);
+\draw [arrow] (node2) -- (node3);
+\draw [arrow] (node3) -- (node4);
+\draw [arrow] (node4) -- (node5);
+\draw [arrow] (node5) -- (node6);
+\draw [arrow] (node6) -- (node7);
+\draw [arrow] (node7) -- (node8);
+\draw [arrow] (node8) -- (node9);
+
+\end{tikzpicture}
+\caption{Workflow of the Proposed Demand Forecasting Layer}
+\label{fig:demand_forecasting_workflow}
+\end{figure}
+
+\subsection{Exploratory Data Analysis and Design Decisions}
+
+Prior to model development, an exploratory analysis was conducted to examine the temporal characteristics of customer demand and prepare the data for sequential forecasting. The analysis focused on constructing a reliable forecasting dataset and selecting an appropriate prediction model.
+
+\paragraph{Dataset Preparation}
+Historical delivery records were aggregated into shift-wise demand observations for each H3 cell. To improve data quality, H3 cells with extremely sparse demand were excluded from the training dataset, reducing the influence of irregular delivery patterns.
+
+Table 1 summarizes the characteristics of the resulting forecasting dataset.
+
+\begin{table}[htbp]
+\centering
+\caption{Effect of Temporal Filtering on the Forecasting Dataset}
+\label{tab:temporal_filtering_effect}
+\begin{tabular}{lrrr}
+\hline
+\textbf{Metric} & \textbf{Before Filtering} & \textbf{After Filtering} & \textbf{Retention (\%)} \\
+\hline
+Total Delivery Orders & 1,776,101 & 1,769,943 & 99.65 \\
+Unique H3 Cells       & 4,178     & 2,558     & 61.22 \\
+Orders Removed        & —         & 6,158     & 0.35  \\
+H3 Cells Removed      & —         & 1,620     & 38.78 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{spatial_demand.png}
+    \caption{Before Filtering}
+    \label{fig:distribution_before}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{filtered_spatial_demand.png}
+    \caption{After Filtering}
+    \label{fig:distribution_after}
+\end{subfigure}
+\caption{Distribution of Orders per H3 Cell}
+\label{fig:distribution_orders_h3_cell}
+\end{figure}
+
+
+Following temporal filtering, 2,558 H3 cells (61.22\% of the original cells) were retained while preserving 99.65\% of all delivery orders. H3 cells with observations across fewer than 12 distinct operational shifts, corresponding to the LSTM lookback window, were removed. This reduced the influence of sparsely observed regions and improved the availability of meaningful temporal sequences for model training.
+
+\subsubsection{Shift-wise Demand Analysis}
+\label{subsec:shift_wise_demand_analysis}
+
+Instead of daily aggregation, customer orders were grouped into three operational shifts (Morning, Afternoon, and Evening) to provide finer temporal resolution while maintaining sufficient observations per forecasting interval. This representation aligns with operational decision-making, including driver allocation and dispatch scheduling.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{shift_wise_demand.png}
+\caption{Shift-wise Demand Distribution}
+\label{fig:shift_wise_demand_distribution}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Shift-wise Demand Distribution}
+\label{tab:shiftwise_demand_distribution}
+\begin{tabularx}{0.8\textwidth}{X r r}
+\toprule
+\textbf{Shift} & \textbf{Orders} & \textbf{Percentage (\%)} \\
+\midrule
+Morning   & 1,184,945 & 66.72 \\
+Afternoon &   523,829 & 29.49 \\
+Evening   &    67,327 &  3.79 \\
+\midrule
+\textbf{Total} & \textbf{1,776,101} & \textbf{100.00} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\newpage
+As detailed in Table~\ref{tab:shiftwise_demand_distribution} and Figure~\ref{fig:shift_wise_demand_distribution}, order distribution demonstrates substantial operational variance across time windows. The Morning shift accounts for the majority of total demand ($66.72\%$, $1,184,945$ orders), whereas the Afternoon ($29.49\%$, $523,829$ orders) and Evening ($3.79\%$, $67,327$ orders) shifts exhibit significantly lower volumes. This pronounced temporal skew validates the decision to parameterize predictive models independently per operational shift rather than relying on aggregated daily demand profiles.
+
+\subsubsection{Feature Engineering}
+\label{subsec:feature_engineering}
+
+Historical delivery records were transformed into shift-level observations for each H3 cell. In addition to historical demand, temporal features were engineered to capture daily and weekly demand cycles. Cyclical variables, including $\sin(\text{shift})$, $\cos(\text{shift})$, $\sin(\text{day\_of\_week})$, and $\cos(\text{day\_of\_week})$, were used to preserve the periodic nature of time while avoiding discontinuities between consecutive shifts and weekdays.
+
+\begin{table}[htbp]
+\centering
+\caption{Engineered Features Used for Forecasting}
+\label{tab:engineered_forecasting_features}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.30\textwidth} >{\raggedright\arraybackslash}X}
+\hline
+\textbf{Feature} & \textbf{Description} \\
+\hline
+Demand & Historical demand of the H3 cell \\
+Rolling Mean (3) & Mean demand over the previous three shifts \\
+Rolling Std (3) & Demand variability over the previous three shifts \\
+Demand Difference & Difference from the previous shift \\
+Growth Rate & Relative change in demand \\
+Shift & Operational shift identifier \\
+Day-of-Week (Sin) & Cyclical weekday encoding: $\sin\left(\frac{2\pi \cdot \text{day}}{7}\right)$ \\
+Day-of-Week (Cos) & Cyclical weekday encoding: $\cos\left(\frac{2\pi \cdot \text{day}}{7}\right)$ \\
+Is Weekend & Weekend binary indicator \\
+Day Index & Continuous day counter \\
+\hline
+\end{tabularx}
+\end{table}
+
+A total of 10 input features were used for demand forecasting as shown in Table~\ref{tab:engineered_forecasting_features}. These include historical demand, rolling statistics, demand trend indicators, shift information, cyclical weekday encoding, weekend information, and a continuous day index. The feature set combines short-term demand dynamics with periodic temporal characteristics, enabling the LSTM to effectively model both local fluctuations and recurring weekly demand patterns.
+
+\subsubsection{Model Selection}
+\label{subsec:model_selection}
+
+Several forecasting models were evaluated for shift-wise demand prediction. Linear regression cannot capture sequential dependencies, while ARIMA is difficult to scale across thousands of independent H3 cells. In contrast, Long Short-Term Memory (LSTM) networks effectively model temporal dependencies and are well suited for large-scale spatio-temporal forecasting.
+
+\begin{table}[htbp]
+\centering
+\caption{Forecasting Model Selection}
+\label{tab:forecasting_model_selection}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\hline
+\textbf{Model} & \textbf{Advantages} & \textbf{Limitations} \\
+\hline
+Linear Regression & Simple and computationally efficient & Cannot model temporal dependencies \\ \\
+ARIMA & Effective for individual time series & Poor scalability across many H3 cells \\ \\
+LSTM (Selected) & Learns long-term temporal dependencies & Higher computational cost \\
+\hline
+\end{tabularx}
+\end{table}
+
+Based on these considerations, the LSTM architecture was selected for forecasting shift-wise demand in the proposed framework.
+
+\subsection{Proposed LSTM Forecasting Model}
+\label{sec:proposed_lstm_forecasting_model}
+
+Based on the temporal patterns identified during exploratory analysis, a Long Short-Term Memory (LSTM) network was developed to forecast customer demand for the next operational shift. The model utilizes historical shift-level demand sequences and engineered temporal features to estimate future demand for each H3 cell. The forecasting framework consists of four stages: input representation, network architecture, model training, and demand prediction.
+
+\subsubsection{Input Representation}
+\label{subsec:input_representation}
+
+Training samples were generated using a sliding-window approach. For each H3 cell, the model receives the demand observations from the previous 12 operational shifts, together with their corresponding temporal features, and predicts the demand for the next shift.
+
+The input sequence is represented as
+The temporal feature sequence $\mathbf{X}_t$ for predicting demand at time step $t$ is constructed using a 12-observation lookback window:
+\begin{equation}
+    \mathbf{X}_t = \{\mathbf{x}_{t-11}, \mathbf{x}_{t-10}, \dots, \mathbf{x}_t\}
+\end{equation}
+where each observation vector $\mathbf{x}_i \in \mathbb{R}^{10}$ is defined as:
+\begin{equation}
+    \mathbf{x}_i = \left[ d_i, \, \bar{d}_i, \, \sigma_i, \, \Delta d_i, \, g_i, \, s_i, \, \sin(w_i), \, \cos(w_i), \, e_i, \, n_i \right]
+\end{equation}
+
+In Equation~(2), $d_i$ represents historical demand; $\bar{d}_i$ and $\sigma_i$ denote the rolling mean and standard deviation over a 3-step window, respectively; $\Delta d_i$ is the first-order demand difference; $g_i$ is the demand growth rate; $s_i$ denotes the operational shift identifier; $\sin(w_i)$ and $\cos(w_i)$ provide cyclical encoding for the day of the week; $e_i$ is a binary weekend indicator; and $n_i$ represents the continuous chronological day index. \\
+The prediction target is
+\begin{equation}
+Y_t = D_{t+1}
+\end{equation}
+This sequential formulation enables the model to learn temporal demand patterns across consecutive operational shifts.
+
+\subsubsection{LSTM Network Architecture}
+\label{subsec:lstm_network_architecture}
+
+The proposed forecasting model consists of a single LSTM layer followed by a dropout layer and a fully connected output layer that predicts demand for the next operational shift. The compact architecture balances predictive capability with computational efficiency, making it suitable for large-scale forecasting across thousands of H3 cells as shown in Figure~\ref{fig:proposed_lstm_architecture} on next page.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    node distance=1.0cm,
+    block/.style={
+        draw, 
+        rectangle, 
+        rounded corners=2pt, 
+        fill=blue!5, 
+        draw=blue!40, 
+        thick, 
+        text width=5cm, 
+        align=center, 
+        minimum height=0.7cm,
+        font=\small
+    },
+    arrow/.style={
+        -Stealth, 
+        thick, 
+        draw=gray!80
+    }
+]
+
+% Nodes
+\node (node1) [block] {Input Sequence\\(12 $\times$ Features)};
+\node (node2) [block, below=of node1] {LSTM Layer};
+\node (node3) [block, below=of node2] {Dropout Layer};
+\node (node4) [block, below=of node3] {Fully Connected};
+\node (node5) [block, below=of node4] {Predicted Demand};
+
+% Arrows
+\draw [arrow] (node1) -- (node2);
+\draw [arrow] (node2) -- (node3);
+\draw [arrow] (node3) -- (node4);
+\draw [arrow] (node4) -- (node5);
+
+\end{tikzpicture}
+\caption{Proposed LSTM Forecasting Architecture}
+\label{fig:proposed_lstm_architecture}
+\end{figure}
+
+\subsubsection{Model Training}
+\label{subsec:model_training}
+
+Following feature engineering, time-series observations were structured into supervised learning samples using a rolling lookback window of 12 operational shifts.  As summarized in Table~\ref{tab:dataset_split_summary}, the dataset was partitioned chronologically to avoid data leakage across temporal boundaries. This process yielded $688,200$ training, $133,200$ validation, and $133,200$ testing sequences. Each input sample is structured as a tensor $\mathbf{X}_t \in \mathbb{R}^{12 \times 10}$, capturing 12 consecutive temporal observations across 10 engineered feature channels.
+\\
+\begin{table}[H]
+\centering
+\caption{Chronological Dataset Split and Sequence Summary}
+\label{tab:dataset_split_summary}
+\begin{tabularx}{\textwidth}{l c c X}
+\toprule
+\textbf{Dataset} & \textbf{Days} & \textbf{Sequence Shape} & \textbf{Description} \\
+\midrule
+Training   & 128 & $(688,200, 12, 10)$ & $688,200$ training sequences with a 12-shift lookback window and 10 features. \\
+Validation &  28 & $(133,200, 12, 10)$ & $133,200$ validation sequences used for hyperparameter tuning. \\
+Testing    &  28 & $(133,200, 12, 10)$ & $133,200$ testing sequences reserved for final out-of-sample evaluation. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\newpage
+Model parameters were optimized using the Adam optimizer with Mean Squared Error (MSE) as the loss function. Validation loss was monitored throughout training to evaluate generalization performance.
+
+\begin{table}[H]
+\centering
+\caption{LSTM Model Configuration}
+\label{tab:lstm_model_configuration}
+\begin{tabularx}{0.65\textwidth}{>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\hline
+\textbf{Parameter} & \textbf{Value} \\
+\hline
+Input Features & 10 \\
+Lookback Window & 12 shifts \\
+LSTM Layers & 2 \\
+Hidden Units & 64 \\
+Dropout & 0.20 \\
+Dense Layer & 64 $\rightarrow$ 32 $\rightarrow$ 1 \\
+Batch Size & 1024 \\
+Optimizer & Adam \\
+Learning Rate & 0.001 \\
+Loss Function & Mean Squared Error (MSE) \\
+Early Stopping & Patience = 3 \\
+\hline
+\end{tabularx}
+\end{table}
+
+Table~\ref{tab:lstm_model_configuration} The forecasting model employs a two-layer LSTM architecture with 64 hidden units and a dropout rate of 0.2 to capture temporal demand patterns while reducing overfitting. A lookback window of 12 shifts enables the model to learn short-term demand dependencies. The model is trained using the Adam optimizer with Mean Squared Error (MSE) as the loss function, while early stopping ensures that training terminates once the validation loss ceases to improve.
+
+\subsubsection{LSTM-Based Shift-wise Demand Forecasting Algorithm}
+\begin{algorithm}[H]
+\caption{LSTM-Based Shift-Wise Demand Forecasting}
+\label{alg:lstm_demand_forecasting}
+\begin{algorithmic}[1]
+\Require Historical shift-wise demand dataset $\mathcal{D}$, trained LSTM model $\mathcal{M}$, lookback window size $L$
+\Ensure Forecasted demand for the next shift aggregated by operational zone
+
+\State Aggregate historical orders into shift-wise demand for every H3 cell
+\State Construct feature set $X$ with temporal metrics:
+    \Statex \hspace{\algorithmicindent}\textbf{Demand indicators:} Demand, Rolling Mean, Rolling Std Dev
+    \Statex \hspace{\algorithmicindent}\textbf{Trend features:} Demand Difference, Growth Rate
+    \Statex \hspace{\algorithmicindent}\textbf{Cyclical/Calendar features:} Shift ID, Day-of-Week ($\sin, \cos$), Weekend Indicator, Day Index
+\State Normalize input features $X$ using Min-Max Scaling
+\State Construct sequential input tensors using lookback window $L = 12$ shifts
+
+\For{each H3 cell spatial sequence $s \in \mathcal{D}$}
+    \State $\hat{y}_{\text{cell}} \gets \text{Predict shift demand using } \mathcal{M}(s)$
+\EndFor
+
+\State Aggregate cell-level predictions $\hat{y}_{\text{cell}}$ to corresponding operational zones:
+    $$\hat{Y}_{\text{zone}} = \sum_{\text{cell} \in \text{zone}} \hat{y}_{\text{cell}}$$
+
+\State \Return Zone-wise demand forecasts $\hat{Y}_{\text{zone}}$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Experimental Results and Discussion}
+\label{subsec:experimental_results_and_discussion}
+
+The proposed LSTM forecasting model was evaluated using the processed shift-wise demand dataset to assess its ability to predict customer demand for the upcoming operational shift. The evaluation focused on prediction accuracy, training convergence, and the model's capability to capture temporal demand patterns across different H3 cells.
+
+\begin{table}[H]
+\centering
+\caption{Forecasting Performance}
+\label{tab:forecasting_performance}
+\begin{tabularx}{0.65\textwidth}{>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+Mean Absolute Error (MAE) & 0.8856 \\
+Root Mean Square Error (RMSE) & 2.0295 \\
+Coefficient of Determination ($R^2$) & 0.8763 \\
+\hline
+\end{tabularx}
+\end{table}
+
+AS shown in Table~\ref{tab:forecasting_performance}, the proposed LSTM model achieved an MAE of 0.8856 orders, indicating that the average prediction deviates by less than one order per H3 cell per shift. The RMSE of 2.0295 orders suggests that larger prediction errors are limited primarily to high-demand periods. Furthermore, the model attained an R² score of 0.8763, demonstrating that approximately 87.6\% of the variance in shift-wise demand is explained by the learned temporal patterns.
+
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{model_training.png}
+\caption{Training and Validation Loss Curves}
+\label{fig:training_validation_loss_curves}
+\end{figure}
+
+As shown in Figure~\ref{fig:training_validation_loss_curves}, the model converged rapidly during the initial training epochs, with the training loss decreasing from 0.00100 to approximately 0.00036, while the validation loss reduced from 0.00046 to a minimum of 0.00036. The close overlap between the two curves throughout training indicates stable learning and good generalization. Early stopping terminated training after 16 epochs, preventing unnecessary optimization beyond the point of minimum validation loss.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{actual_predicted.png}
+\caption{Actual vs Predicted Demand}
+\label{fig:predictions_on_test}
+\end{figure}
+
+As shown in Figure~\ref{fig:predictions_on_test}, the predicted demand closely follows the observed demand across the selected test samples. The model successfully captures recurring demand fluctuations and accurately predicts prolonged low-demand intervals. Minor deviations are primarily observed during isolated demand spikes, where rapid changes are inherently more difficult to forecast. Overall, the predicted series maintains close agreement with the ground truth, supporting the quantitative performance obtained on the test dataset.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{actual_predicted1.png}
+\caption{Actual vs Predicted Scatter Plot}
+\label{fig:predictions_on_test_scatter}
+\end{figure}
+
+As shown in Figure~\ref{fig:predictions_on_test_scatter}, the scatter plot demonstrates a strong linear relationship between actual and predicted demand values. A majority of observations lie close to the 45° reference line, indicating high prediction accuracy across most demand levels. Slightly larger dispersion is observed for demand values exceeding 40 orders, reflecting the increased variability associated with high-demand regions. Nevertheless, the overall distribution is consistent with the achieved R² value of 0.8763.
+
+\subsection{Demand Prediction Pipeline}
+\label{subsec:demand_prediction_pipeline}
+
+During inference, the trained LSTM model predicts demand for the next operational shift of each H3 cell using the most recent historical sequence. Cell-level forecasts are subsequently aggregated into the operational zones generated by the Adaptive H3 Spatial Indexing (AHSI) layer and supplied to the dispatch optimization module.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    node distance=0.9cm,
+    block/.style={
+        draw, 
+        rectangle, 
+        rounded corners=2pt, 
+        fill=blue!5, 
+        draw=blue!40, 
+        thick, 
+        text width=5.5cm, 
+        align=center, 
+        minimum height=0.65cm,
+        font=\small
+    },
+    arrow/.style={
+        -Stealth, 
+        thick, 
+        draw=gray!80
+    }
+]
+
+% Nodes
+\node (node1) [block] {Historical Shift Demand};
+\node (node2) [block, below=of node1] {Generate Input Sequence};
+\node (node3) [block, below=of node2] {Trained LSTM Model};
+\node (node4) [block, below=of node3] {Predict Next Shift};
+\node (node5) [block, below=of node4] {Predicted H3 Demand};
+\node (node6) [block, below=of node5] {Aggregate to Zones};
+\node (node7) [block, below=of node6] {Dispatch Optimization};
+
+% Arrows
+\draw [arrow] (node1) -- (node2);
+\draw [arrow] (node2) -- (node3);
+\draw [arrow] (node3) -- (node4);
+\draw [arrow] (node4) -- (node5);
+\draw [arrow] (node5) -- (node6);
+\draw [arrow] (node6) -- (node7);
+
+\end{tikzpicture}
+\caption{Forecasting Pipeline}
+\label{fig:forecasting_pipeline}
+\end{figure}
+
+The resulting zone-level forecasts provide an estimate of future workload, enabling proactive resource allocation and dispatch planning.
+
+\newpage
+\section{Dispatch Optimization}
+\label{subsec:dispatch_optimization}
+
+\subsection{Layer Overview}
+\label{subsubsec:dispatch_layer_overview}
+
+The Adaptive H3 Spatial Indexing layer generates balanced operational zones, while the demand forecasting layer estimates customer demand for the upcoming operational shift. The dispatch optimization layer converts these outputs into operational dispatch decisions through a two-stage framework.
+
+The first stage groups compatible customer orders into efficient delivery batches based on their spatial and operational characteristics. The second stage evaluates each batch using multiple operational metrics to determine whether it should be dispatched immediately or retained for a future dispatch cycle.
+
+By separating batch formation from dispatch decision-making, the framework independently optimizes delivery grouping and dispatch timing. This modular design improves operational flexibility while providing optimized delivery batches for the subsequent driver assignment and simulation layers.
+
+\subsection{Dispatch Optimization Workflow}
+\label{subsec:dispatch_layer_workflow}
+
+
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    node distance=1.2cm and 0cm,
+    block/.style={
+        rectangle, 
+        draw=black!85, 
+        thick,
+        fill=blue!10, % <--- REPLACE fill=white HERE
+        text width=5.5cm, 
+        minimum height=1.0cm, 
+        align=center, 
+        font=\small,
+        rounded corners=2pt
+    },
+    splitblock/.style={
+        rectangle, 
+        draw=black!85, 
+        thick,
+        fill=blue!10, % <--- REPLACE fill=white HERE
+        text width=4.5cm, 
+        minimum height=1.0cm, 
+        align=center, 
+        font=\small,
+        rounded corners=2pt
+    },
+    line/.style={
+        draw=black!85, 
+        thick, 
+        ->, 
+        >=stealth
+    }
+]
+
+% Nodes
+\node [block] (orders) {Customer Orders};
+\node [block, below=of orders] (attributes) {Product Information \&\\Priority Attributes};
+\node [block, below=of attributes] (history) {Retention History of\\Pending Orders};
+\node [block, below=of history] (pps) {Compute Product Priority\\Score (PPS)};
+\node [block, below=of pps] (rps) {Compute Retention Penalty\\Score (RPS)};
+\node [block, below=of rps] (eps) {Calculate Effective Priority\\Score (EPS)};
+\node [block, below=of eps] (sort) {Sort Orders by\\Descending EPS};
+\node [block, below=of sort] (batch) {Greedy Batch Formation\\under Vehicle Capacity};
+\node [block, below=of batch] (candidate) {Candidate Delivery Batches};
+
+% Paths
+\path [line] (orders) -- (attributes);
+\path [line] (attributes) -- (history);
+\path [line] (history) -- (pps);
+\path [line] (pps) -- (rps);
+\path [line] (rps) -- (eps);
+\path [line] (eps) -- (sort);
+\path [line] (sort) -- (batch);
+\path [line] (batch) -- (candidate);
+
+\end{tikzpicture}
+\caption{Sub-Layer I: EPS-Based Batch Formation}
+\label{fig:order_batching_workflow}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    node distance=0.6cm and 0cm,
+    block/.style={
+        rectangle, 
+        draw=black!85, 
+        thick,
+        fill=blue!10,
+        text width=5.5cm, 
+        minimum height=0.9cm, 
+        align=center, 
+        font=\small,
+        rounded corners=2pt
+    },
+    splitblock/.style={
+        rectangle, 
+        draw=black!85, 
+        thick,
+        fill=blue!10,
+        text width=3.2cm, 
+        minimum height=0.9cm, 
+        align=center, 
+        font=\small,
+        rounded corners=2pt
+    },
+    line/.style={
+        draw=black!85, 
+        thick, 
+        ->, 
+        >=stealth
+    }
+]
+
+% Main Flow Nodes
+\node [block] (candidate) {Candidate Delivery Batches};
+\node [block, below=of candidate] (bp) {Compute Batch Priority\\(BP)};
+\node [block, below=of bp] (vu) {Compute Vehicle\\Utilization (VU)};
+\node [block, below=of vu] (sp) {Compute Storage\\Pressure (SP)};
+\node [block, below=of sp] (rc) {Compute Retention\\Penalty (RP)};
+\node [block, below=of rc] (fo) {Compute Forecast\\Opportunity (FO)};
+\node [block, below=of fo] (bus) {Calculate Batch Utility\\Score (BUS)};
+\node [block, below=of bus] (bilp) {Binary Integer\\Optimization (BILP)};
+
+% Split Final Nodes
+\node [splitblock, below left=0.8cm and 0.2cm of bilp] (dispatch) {Dispatched Batches};
+\node [splitblock, below right=0.8cm and 0.2cm of bilp] (retain) {Retained Batches};
+
+% Main Linear Paths
+\path [line] (candidate) -- (bp);
+\path [line] (bp) -- (vu);
+\path [line] (vu) -- (sp);
+\path [line] (sp) -- (rc);
+\path [line] (rc) -- (fo);
+\path [line] (fo) -- (bus);
+\path [line] (bus) -- (bilp);
+
+% Clean Orthogonal Branching (vertical drop then horizontal split)
+\draw [thick, black!85] (bilp.south) -- ++(0,-0.4) coordinate (mid);
+\draw [line] (mid) -| (dispatch.north);
+\draw [line] (mid) -| (retain.north);
+
+\end{tikzpicture}
+\caption{Sub-Layer II: BUS-Based Dispatch Optimization.}
+\label{fig:batch_utility_workflow}
+\end{figure}
+
+
+
+\subsection{Exploratory Data Analysis \& Design Decisions}
+\label{subsec:operational_analysis_design}
+
+Before developing the dispatch optimization algorithms, the operational characteristics of last-mile delivery were analyzed to identify the key factors influencing dispatch efficiency. The analysis showed that dispatch optimization comprises two complementary decision problems: forming efficient delivery batches and determining the appropriate dispatch time for each batch.
+
+\subsubsection{Need for Batch Formation}
+\label{subsubsec:need_batch_formation}
+
+Dispatching individual customer orders results in poor vehicle utilization and higher operational costs. Batch formation addresses this by grouping compatible orders based on their spatial and operational characteristics while satisfying practical delivery constraints, thereby improving delivery efficiency.
+
+\subsubsection{Need for Dispatch Optimization}
+\label{subsubsec:need_dispatch_optimization}
+
+After batches are formed, the system must decide whether to dispatch them immediately or retain them for future consolidation. Immediate dispatch may reduce vehicle utilization, whereas excessive delays increase customer waiting times and storage pressure. Consequently, dispatch decisions must balance vehicle utilization, operational urgency, storage overhead, forecasted opportunity, and batch retention cost. This motivates a multi-objective dispatch scoring mechanism rather than simple threshold-based rules.
+
+\subsection{EPS-Based Batch Formation}
+\label{subsec:eps_batch_formation}
+
+The first sub-layer of the proposed dispatch optimization framework constructs efficient delivery batches from incoming customer orders. Instead of dispatching orders individually, each order is assigned an Edge Priority Score (EPS) that reflects its urgency for inclusion in the next dispatch cycle. The score combines the operational priority of an order with a retention penalty for deferred orders. Orders are then sorted in descending order of EPS, and delivery batches are formed using a greedy algorithm that sequentially assigns the highest-priority orders while satisfying vehicle capacity constraints. The resulting batches are forwarded to the dispatch optimization stage for dispatch decision-making.
+
+\subsubsection{Batch Representation}
+\label{subsubsec:batch_representation}
+
+Let
+\begin{equation}
+O = \{o_1, o_2, \ldots, o_n\}
+\end{equation}
+denote the set of customer orders awaiting dispatch.
+
+A delivery batch is represented as
+\begin{equation}
+B_k = \{o_1, o_2, \ldots, o_m\},
+\end{equation}
+subject to the vehicle capacity constraint
+\begin{equation}
+\sum_{o_i \in B_k} q_i \le C,
+\end{equation}
+where $q_i$ is the quantity associated with order $o_i$ and $C$ denotes the vehicle carrying capacity.
+
+Orders are processed in descending EPS order. The greedy batching algorithm sequentially adds orders to the current batch until the capacity constraint is reached, after which a new batch is initiated. This process continues until all orders have been assigned.
+
+\subsubsection{Edge Priority Score (EPS)}
+\label{subsubsec:edge_priority_score}
+
+To prioritize orders for batch formation, an Edge Priority Score (EPS) is computed as
+\begin{equation}
+\mathrm{EPS}_i = \alpha P_i + \beta R_i,
+\end{equation}
+where $P_i$ is the product priority score, $R_i$ is the retention penalty, and
+\begin{equation}
+\alpha + \beta = 1.
+\end{equation}
+
+The retention penalty is given by
+\begin{equation}
+R_i = \min(c_i\delta,\; R_{\max}),
+\end{equation}
+where $c_i$ is the number of dispatch cycles for which an order has been retained, $\delta$ is the penalty increment per cycle, and $R_{\max}$ is the maximum allowable penalty.
+
+In this work,
+\begin{equation}
+\alpha = 0.75, \qquad \beta = 0.25, \qquad \delta = 0.10, \qquad R_{\max} = 0.40.
+\end{equation}
+
+A higher weight is assigned to the product priority score because it represents the intrinsic operational urgency of an order, while the retention penalty prevents prolonged postponement of pending orders without dominating the batching process. These two components were selected because they directly address the objectives of batch formation---prioritizing urgent orders and ensuring fairness for retained orders. Other operational factors, including vehicle utilization, storage capacity, and forecasted demand, are evaluated separately during the dispatch optimization stage, preserving the modular design of the proposed framework.
+
+\subsubsection{Batch Formation Algorithm}
+\label{subsubsec:batch_formation_algorithm}
+
+The complete batch formation procedure is summarized in Algorithm~\ref{alg:eps_batch_formation}.
+
+\begin{algorithm}[htbp]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+
+\Input{
+    Set of pending customer orders $O$;\\
+    Vehicle capacity $C$
+}
+\Output{
+    Set of delivery batches $\mathcal{B}$
+}
+
+\BlankLine
+\For{each customer order $o_i \in O$}{
+    Compute Product Priority Score $P_i$\;\\
+    Compute retention penalty $R_i$ based on dispatch retention cycles\;\\
+    Calculate Effective Priority Score $\mathrm{EPS}_i$\;
+}
+Sort $O$ in descending order of $\mathrm{EPS}_i$\;\\
+
+Initialize $\mathcal{B} \leftarrow \emptyset$\;\\
+Initialize current batch $B_k \leftarrow \emptyset$ with $q_{\mathrm{current}} \leftarrow 0$\;\\
+
+\For{each order $o_i \in O$ in sorted sequence}{
+    \If{$(q_{\mathrm{current}} + q_i) \le C$}{
+        $B_k \leftarrow B_k \cup \{o_i\}$\;\\
+        $q_{\mathrm{current}} \leftarrow q_{\mathrm{current}} + q_i$\;
+    }
+    \Else{
+        $\mathcal{B} \leftarrow \mathcal{B} \cup \{B_k\}$\;\\
+        $B_k \leftarrow \{o_i\}$\;\\
+        $q_{\mathrm{current}} \leftarrow q_i$\;
+    }
+}
+
+\If{$B_k \neq \emptyset$}{
+    $\mathcal{B} \leftarrow \mathcal{B} \cup \{B_k\}$\;
+}
+
+\Return{$\mathcal{B}$}\;
+\caption{EPS-Based Batch Formation}
+\label{alg:eps_batch_formation}
+\end{algorithm}
+
+\subsubsection{Computational Complexity}
+Let $n$ denote the number of pending customer orders. Computing the Product Priority Score (PPS), Retention Penalty Score (RPS), and the final EPS score requires a single pass over all orders, resulting in a time complexity of $\mathcal{O}(n)$. Sorting the orders in descending order of EPS dominates the computation with a complexity of $\mathcal{O}(n \log n)$. The subsequent greedy batch formation processes each order once while respecting vehicle capacity constraints, yielding $\mathcal{O}(n)$. Therefore, the overall computational complexity of the EPS-based batching algorithm is
+
+\begin{equation}
+\mathcal{O}(n \log n),
+\end{equation}
+
+which is primarily determined by the sorting operation. The linear memory requirement of $\mathcal{O}(n)$ enables efficient execution for real-time dispatch scenarios.
+
+\subsection{BUS-Based Dispatch Optimization}
+\label{subsec:bus_dispatch_optimization}
+
+Following batch formation, the second sub-layer determines whether each delivery batch should be dispatched immediately or retained for a future dispatch cycle. To support this decision, each batch is evaluated using a Batch Utility Score (BUS) that combines multiple operational objectives into a single decision metric. Unlike rule-based approaches, BUS simultaneously considers operational urgency, resource utilization, storage conditions, retention effects, and forecasted future demand, enabling balanced and adaptive dispatch decisions.
+
+\subsubsection{Operational Dispatch Metrics}
+\label{subsubsec:operational_dispatch_metrics}
+
+The Batch Utility Score is computed using five complementary operational metrics that characterize the suitability of a delivery batch for immediate dispatch.
+
+\paragraph{Batch Priority ($\mathrm{BP}$)}
+Batch Priority measures the operational urgency of a delivery batch based on the priority of its constituent orders, ensuring that time-sensitive deliveries receive higher dispatch preference.
+
+\paragraph{Vehicle Utilization ($\mathrm{VU}$)}
+Vehicle Utilization measures the proportion of vehicle capacity occupied by a delivery batch. Higher utilization improves transportation efficiency by reducing the number of delivery trips.
+
+\paragraph{Storage Pressure ($\mathrm{SP}$)}
+Storage Pressure represents the current utilization of dispatch center capacity. Higher storage occupancy increases the incentive to dispatch batches and relieve congestion.
+
+\paragraph{Retention Penalty ($\mathrm{RP}$)}
+Retention Penalty quantifies the penalty associated with delaying a delivery batch across successive dispatch cycles, preventing excessive customer waiting times.
+
+\paragraph{Forecast Opportunity ($\mathrm{FO}$)}
+Forecast Opportunity estimates the potential benefit of delaying dispatch to consolidate anticipated future demand predicted by the demand forecasting layer, enabling more informed dispatch decisions.
+
+
+\subsubsection{Batch Utility Score (BUS)}
+\label{subsubsec:batch_utility_score}
+
+To combine the operational metrics into a single decision criterion, the proposed framework defines the Batch Utility Score ($\mathrm{BUS}$) as a weighted linear combination of the normalized metric values.
+
+The Batch Utility Score is computed as
+\begin{equation}
+\mathrm{BUS} = w_1 \mathrm{BP} + w_2 \mathrm{VU} + w_3 \mathrm{SP} - w_4 \mathrm{RP} + w_5 \mathrm{FO},
+\end{equation}
+where $\mathrm{BP}$ denotes the Batch Priority score, $\mathrm{VU}$ denotes Vehicle Utilization, $\mathrm{SP}$ denotes Storage Pressure, $\mathrm{RP}$ denotes Retention Penalty, and $\mathrm{FO}$ denotes Forecast Opportunity. The metric weights satisfy the normalization constraint
+\begin{equation}
+\sum_{i=1}^{5} w_i = 1.
+\end{equation}
+
+In this implementation, the specific weights are assigned as
+\begin{equation}
+w_1 = 0.35, \quad w_2 = 0.20, \quad w_3 = 0.15, \quad w_4 = 0.20, \quad w_5 = 0.10.
+\end{equation}
+
+Substituting these weight values yields the complete operational scoring model:
+\begin{equation}
+\mathrm{BUS} = 0.35\,\mathrm{BP} + 0.20\,\mathrm{VU} + 0.15\,\mathrm{SP} - 0.20\,\mathrm{RP} + 0.10\,\mathrm{FO}.
+\end{equation}
+
+The negative contribution of the Retention Penalty term reflects the increasing penalty associated with delaying dispatch, whereas the remaining metrics contribute positively toward the dispatch decision. A larger $\mathrm{BUS}$ value indicates that dispatching the batch is operationally advantageous under current system conditions.
+
+\subsubsection{Dispatch Decision Optimization}
+\label{subsubsec:dispatch_decision_optimization}
+
+After computing the Batch Utility Score ($\mathrm{BUS}$) for each candidate batch, the dispatch decision is formulated as a Binary Integer Linear Programming (BILP) problem. The objective is to maximize the total utility of dispatched batches while satisfying operational resource constraints.
+
+Let the dispatch decision variable for batch $i$ be defined as
+\begin{equation}
+x_i = 
+\begin{cases}
+1, & \text{if batch } i \text{ is dispatched}, \\
+0, & \text{otherwise}.
+\end{cases}
+\end{equation}
+
+The optimization problem is formulated as follows:
+\begin{equation}
+\max \sum_{i=1}^{N} \mathrm{BUS}_i \, x_i,
+\end{equation}
+subject to:
+
+\paragraph{Vehicle Availability Constraint}
+\begin{equation}
+\sum_{i=1}^{N} x_i \le V_{\mathrm{available}},
+\end{equation}
+where $V_{\mathrm{available}}$ denotes the number of available delivery vehicles.
+
+\paragraph{Driver Availability Constraint}
+\begin{equation}
+\sum_{i=1}^{N} x_i \le D_{\mathrm{available}},
+\end{equation}
+where $D_{\mathrm{available}}$ represents the number of available drivers.
+
+\paragraph{Vehicle Capacity Constraint}
+\begin{equation}
+Q_i x_i \le C_v, \qquad \forall i \in \{1, \ldots, N\},
+\end{equation}
+where $Q_i$ is the total load of batch $i$ and $C_v$ is the maximum carrying capacity of the assigned vehicle.
+
+\paragraph{Binary Decision Constraint}
+\begin{equation}
+x_i \in \{0, 1\}, \qquad \forall i \in \{1, \ldots, N\}.
+\end{equation}
+
+The optimization selects the subset of batches that maximizes the overall Batch Utility Score while satisfying the available operational resources. Batches not selected by the optimization are retained for subsequent dispatch cycles, where they are reconsidered alongside newly formed batches.
+
+\subsubsection{Dispatch Optimization Algorithm}
+\label{subsubsec:dispatch_optimization_algorithm}
+
+The complete dispatch decision procedure is summarized in Algorithm~\ref{alg:bus_dispatch_optimization} on next page.
+
+\begin{algorithm}[H]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+
+\Input{
+    Candidate delivery batches $\mathcal{B}$;\\
+    Forecasted demand distribution;\\
+    Dispatch center status;\\
+    Vehicle availability $V_{\mathrm{available}}$;\\
+    Driver availability $D_{\mathrm{available}}$
+}
+\Output{
+    Dispatch decision vector $\mathbf{x} = \{x_1, x_2, \ldots, x_N\}$
+}
+
+\BlankLine
+\For{each candidate batch $B_i \in \mathcal{B}$}{
+    Compute Batch Priority score $\mathrm{BP}_i$\;\\
+    Evaluate Vehicle Utilization $\mathrm{VU}_i$\;\\
+    Measure dispatch center Storage Pressure $\mathrm{SP}_i$\;\\
+    Estimate Retention Cost $\mathrm{RC}_i$\;\\
+    Compute Forecast Opportunity $\mathrm{FO}_i$ using predicted demand\;\\
+    Calculate Batch Utility Score $\mathrm{BUS}_i \leftarrow w_1 \mathrm{BP}_i + w_2 \mathrm{VU}_i + w_3 \mathrm{SP}_i - w_4 \mathrm{RC}_i + w_5 \mathrm{FO}_i$\;
+}
+
+\BlankLine
+Formulate and solve Binary Integer Linear Program (BILP):\;\\
+\quad $\max \sum_{i=1}^{N} \mathrm{BUS}_i \cdot x_i$\;\\
+\quad $\mathrm{s.t.} \quad \sum_{i=1}^{N} x_i \le V_{\mathrm{available}}, \quad \sum_{i=1}^{N} x_i \le D_{\mathrm{available}}, \quad x_i \in \{0,1\}, \, \forall i \in \{1, \ldots, N\}$\;
+
+\BlankLine
+\For{each candidate batch $B_i \in \mathcal{B}$}{
+    \If{$x_i = 1$}{
+        Dispatch batch $B_i$ immediately\;
+    }
+    \Else{
+        Retain batch $B_i$ for next dispatch cycle\;
+    }
+}
+
+\Return{$\mathbf{x}$}\;
+\caption{BUS-Based Dispatch Optimization}
+\label{alg:bus_dispatch_optimization}
+\end{algorithm}
+
+\subsubsection{Computational Complexity}
+Let $m$ denote the number of candidate delivery batches generated by the EPS-based batch formation stage. Computing the Batch Priority (BP), Vehicle Utilization (VU), Storage Pressure (SP), Retention Cost (RC), Forecast Opportunity (FO), and the final Batch Utility Score (BUS) requires a single pass over all candidate batches, resulting in a time complexity of $\mathcal{O}(m)$. 
+
+The subsequent Binary Integer Linear Programming (BILP) formulation optimizes the dispatch decision subject to vehicle, driver, and capacity constraints. While solving a general BILP is NP-hard, modern branch-and-cut optimization solvers efficiently resolve the moderate-sized problem instances encountered in practical dispatch operations. Excluding the optimization solver, the preprocessing stage maintains linear time complexity:
+
+\begin{equation}
+\mathcal{O}(m),
+\end{equation}
+
+whereas the overall runtime is bounded by the BILP optimization process. The space complexity for metric computation and model construction similarly scales linearly as $\mathcal{O}(m)$, ensuring minimal memory overhead during real-time dispatch execution.
+
+\subsection{Role of Shared Constraints in Two-Stage Optimization}
+\label{subsec:role_of_shared_constraints}
+
+Although retention and vehicle capacity appear in both stages of the dispatch optimization framework, they serve distinct purposes corresponding to different decision problems.
+
+\paragraph{Batch Formation Stage (EPS)}
+The EPS-based batch formation stage determines which customer orders should be grouped together. Here, the retention penalty increases the priority of orders that have been deferred across multiple dispatch cycles, preventing indefinite postponement during batch construction. The vehicle capacity constraint ensures that each batch is physically feasible by limiting the total load assigned to a single vehicle.
+
+\paragraph{Dispatch Optimization Stage (BUS)}
+In contrast, the BUS-based dispatch optimization stage determines which of the constructed batches should be dispatched immediately under limited operational resources. At this stage, the retention penalty represents the operational impact of delaying an entire delivery batch, encouraging the dispatch of batches that have already experienced significant waiting. Similarly, vehicle capacity acts as a feasibility constraint during optimization by ensuring that only batches compatible with the available fleet are selected for dispatch.
+
+
+This clear separation preserves the modularity of the proposed framework while allowing each stage to optimize a distinct aspect of the delivery process.
+
+\newpage
+\section{Zone Assignment}
+
+\subsection{Layer Overview}
+Following dispatch optimization, the system produces a set of optimized delivery batches ready for execution. The final step is to assign available drivers to operational zones. Since drivers are generally more efficient in familiar service regions, the proposed zone assignment layer considers both historical driver familiarity and workload balancing to improve delivery performance while ensuring equitable work distribution.
+
+The assignment is formulated as a weighted bipartite matching problem and solved using the Hungarian Algorithm, which computes an optimal one-to-one assignment between available drivers and operational zones by maximizing the overall assignment score.
+
+\subsection{Zone Assignment Workflow}
+The workflow of the proposed zone assignment layer is illustrated in Figure~\ref{fig:driver_assignment_workflow} on next page. Historical delivery records are used to estimate driver familiarity for operational zones, while optimized delivery batches are utilized to compute zone workloads. These measures are combined to construct an assignment matrix, and the Hungarian Algorithm is applied to obtain the optimal driver–zone assignment.
+
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    node distance=0.55cm and 0.4cm,
+    block/.style={
+        rectangle, 
+        draw=black!85, 
+        thick,
+        fill=blue!10,
+        text width=5.5cm, 
+        minimum height=0.85cm, 
+        align=center, 
+        font=\small,
+        rounded corners=2pt
+    },
+    splitblock/.style={
+        rectangle, 
+        draw=black!85, 
+        thick,
+        fill=blue!10,
+        text width=4.2cm, 
+        minimum height=0.85cm, 
+        align=center, 
+        font=\small,
+        rounded corners=2pt
+    },
+    wideblock/.style={
+        rectangle, 
+        draw=black!85, 
+        thick,
+        fill=blue!10,
+        text width=6.2cm, 
+        minimum height=0.85cm, 
+        align=center, 
+        font=\small,
+        rounded corners=2pt
+    },
+    line/.style={
+        draw=black!85, 
+        thick, 
+        ->, 
+        >=stealth
+    }
+]
+
+% Top Root Node
+\node [block] (hist) {Historical Delivery Records};
+
+% Parallel Split Nodes
+\node [splitblock, below left=0.8cm and 0.2cm of hist.south] (driver_hist) {Driver Delivery History\\(Driver--Cell Records)};
+\node [splitblock, below right=0.8cm and 0.2cm of hist.south] (ahsi) {Adaptive H3 Spatial\\Indexing (AHSI Layer)};
+
+% Left Branch
+\node [splitblock, below=of driver_hist] (fam) {Compute Driver\\Familiarity\\[2pt]\footnotesize-- Days Served \quad -- Orders Served};
+
+% Right Branch
+\node [splitblock, below=of ahsi] (zones) {Operational Zones};
+\node [splitblock, below=of zones] (mapping) {Zone--Cell Mapping};
+
+% Convergence Node (centered relative to both parallel branches)
+\path (fam.south) -- (mapping.south) coordinate[midway] (col_mid);
+\node [wideblock, below=1.0cm of col_mid] (agg) {Aggregate Cell Familiarity to Operational\\Zones};
+
+% Linear Flow Downstream
+\node [wideblock, below=of agg] (opt_batches) {Optimized Delivery Batches\\(Dispatch Optimization Layer)};
+\node [wideblock, below=of opt_batches] (matrix) {Construct Driver--Zone Familiarity Matrix};
+\node [wideblock, below=of matrix] (cost) {Convert to Assignment Cost Matrix};
+\node [wideblock, below=of cost] (hungarian) {Hungarian Algorithm};
+\node [wideblock, below=of hungarian] (assignments) {Optimal Driver--Zone Assignments};
+\node [wideblock, below=of assignments] (simulation) {Simulation Engine};
+
+% Paths - Top Split Routing
+\draw [thick, black!85] (hist.south) -- ++(0,-0.35) coordinate (top_mid);
+\draw [line] (top_mid) -| (driver_hist.north);
+\draw [line] (top_mid) -| (ahsi.north);
+
+% Vertical Linear Paths
+\path [line] (driver_hist) -- (fam);
+\path [line] (ahsi) -- (zones);
+\path [line] (zones) -- (mapping);
+
+% Orthogonal Convergence Routing into agg.north
+\draw [thick, black!85] (fam.south) -- ++(0,-0.4) coordinate (fam_b);
+\draw [thick, black!85] (mapping.south) -- ++(0,-0.4) coordinate (map_b);
+\draw [thick, black!85] (fam_b) -- (map_b) coordinate[midway] (conv_mid);
+\draw [line] (conv_mid) -- (agg.north);
+
+% Downstream Linear Paths
+\path [line] (agg) -- (opt_batches);
+\path [line] (opt_batches) -- (matrix);
+\path [line] (matrix) -- (cost);
+\path [line] (cost) -- (hungarian);
+\path [line] (hungarian) -- (assignments);
+\path [line] (assignments) -- (simulation);
+
+\end{tikzpicture}
+\caption{Workflow for Driver--Zone Assignment}
+\label{fig:driver_assignment_workflow}
+\end{figure}
+
+\subsection{Exploratory Analysis \& Design Decisions}
+Before developing the assignment algorithm, an operational analysis was conducted to identify the primary factors influencing driver performance during last-mile deliveries.
+
+\paragraph{Importance of Driver Familiarity}
+The LaDe dataset provides courier trajectories in transformed 2D coordinates rather than actual GPS coordinates, making accurate route distance and travel-time estimation impractical. To address this limitation, the proposed framework uses historical driver familiarity as a proxy for routing efficiency. Drivers who have repeatedly served the same H3 cells are assumed to possess better knowledge of local roads, traffic patterns, building entrances, and customer locations. Accordingly, a familiarity score is computed from the historical frequency with which each driver has served the H3 cells within an operational zone.
+\newpage
+
+\subsection{Proposed Zone Assignment Model}
+The objective of the proposed zone assignment model is to allocate operational zones to available drivers in a manner that maximizes delivery efficiency. To achieve this, the framework combines historical driver familiarity into a unified assignment score. The resulting optimization problem is formulated as a weighted bipartite matching problem and solved using the Hungarian Algorithm.
+
+\subsubsection{Driver Familiarity Computation}
+The proposed zone assignment framework models driver familiarity using two complementary indicators extracted from historical delivery records: the frequency with which a driver has served a location and the volume of deliveries completed within that location. Service frequency reflects long-term operational exposure, while delivery volume captures the intensity of experience. Since repeated exposure contributes more significantly to route memorization and local knowledge than isolated high-volume deliveries, greater importance is assigned to service frequency.
+
+For each driver $i$ and H3 cell $j$, the familiarity score is computed as:
+\begin{equation}
+F_{ij} = \alpha \left( \frac{\text{Days Served}_{ij}}{\text{Total Working Days}_i} \right) + (1-\alpha) \left( \frac{\text{Orders Served}_{ij}}{\text{Total Orders}_i} \right),
+\end{equation}
+where $\text{Days Served}_{ij}$ denotes the number of days driver $i$ served H3 cell $j$, $\text{Total Working Days}_i$ denotes the total number of working days of driver $i$, $\text{Orders Served}_{ij}$ denotes the number of deliveries completed by driver $i$ within H3 cell $j$, and $\text{Total Orders}_i$ denotes the total deliveries completed by driver $i$.
+
+In the proposed framework:
+\begin{equation}
+\alpha = 0.7,
+\end{equation}
+assigning greater importance to service frequency while still incorporating delivery volume. This weighting reflects the assumption that consistent exposure to a service region contributes more to operational familiarity than the number of deliveries completed during a limited number of visits.
+
+\subsubsection{Aggregation to Operational Zones}
+Driver familiarity is initially computed at the H3-cell level, whereas driver assignment is performed at the operational-zone level generated by the Adaptive H3 Spatial Indexing (AHSI) layer. Consequently, cell-level familiarity scores must be aggregated for each operational zone.
+
+Let $Z_k$ denote an operational zone containing $m$ H3 cells. The familiarity of driver $i$ with zone $k$ is computed as:
+\begin{equation}
+F_{ik}^{\text{zone}} = \frac{1}{m} \sum_{j \in Z_k} F_{ij}.
+\end{equation}
+
+The arithmetic mean is adopted because every H3 cell within an operational zone contributes equally to the driver's overall familiarity. Since the AHSI layer constructs operational zones with relatively balanced workloads, assigning equal importance to each constituent H3 cell provides a simple and unbiased estimate of zone-level familiarity while avoiding overemphasis on any individual cell.
+
+The resulting familiarity matrix represents the suitability of assigning each available driver to every operational zone.
+
+\subsubsection{Assignment Cost Matrix}
+The Hungarian Algorithm solves a minimum-cost assignment problem, whereas the objective of the proposed framework is to maximize driver familiarity. Therefore, the familiarity matrix is transformed into an equivalent cost matrix before optimization.
+
+Let:
+\begin{equation}
+F_{\max} = \max_{i,k} F_{ik}^{\text{zone}}.
+\end{equation}
+
+The assignment cost for driver $i$ and operational zone $k$ is defined as:
+\begin{equation}
+C_{ik} = F_{\max} - F_{ik}^{\text{zone}}.
+\end{equation}
+
+This transformation preserves the relative ordering of assignments while converting higher familiarity scores into lower assignment costs. Consequently, minimizing the total assignment cost is equivalent to maximizing the total familiarity. A structure of Assignment Cost matrix is shown in Table~\ref{assignment_cost_matrix} on next page.
+
+\subsubsection{Hungarian Algorithm}
+The assignment cost matrix is formulated as a bipartite matching problem in which rows represent available drivers and columns represent operational zones. The optimization objective is:
+\begin{equation}
+\min \sum_i \sum_k C_{ik} x_{ik},
+\end{equation}
+subject to:
+\begin{equation}
+\sum_k x_{ik} = 1 \quad \forall i,
+\end{equation}
+\begin{equation}
+\sum_i x_{ik} = 1 \quad \forall k,
+\end{equation}
+\begin{equation}
+x_{ik} \in \{0, 1\}.
+\end{equation}
+
+These constraints ensure that each operational zone is assigned exactly one driver while each driver is allocated to at most one operational zone.
+
+The Hungarian Algorithm is then applied to obtain the globally optimal one-to-one assignment in polynomial time.
+
+\begin{table}[htbp]
+\centering
+\caption{Assignment Cost Matrix}
+\label{tab:assignment_cost_matrix}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Driver} & \textbf{Zone 1} & \textbf{Zone 2} & \textbf{Zone 3} & \textbf{Zone 4} \\
+\midrule
+D1 & $C_{11}$ & $C_{12}$ & $C_{13}$ & $C_{14}$ \\
+D2 & $C_{21}$ & $C_{22}$ & $C_{23}$ & $C_{24}$ \\
+D3 & $C_{31}$ & $C_{32}$ & $C_{33}$ & $C_{34}$ \\
+D4 & $C_{41}$ & $C_{42}$ & $C_{43}$ & $C_{44}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\[
+\text{Cost Matrix} \longrightarrow \text{Hungarian Algorithm} \longrightarrow \text{Optimal Driver}\longrightarrow \text{Zone Assignment}
+\]
+
+\subsubsection{Zone Assignment Algorithm}
+\label{subsubsec:zone_assignment_algorithm}
+
+The complete driver assignment procedure is summarized in Algorithm~\ref{alg:zone_assignment}.
+
+\begin{algorithm}[htbp]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+
+\Input{
+    Set of available drivers $\mathcal{D}$;\\
+    Set of operational zones $\mathcal{Z}$ generated by AHSI;\\
+    Historical delivery records $\mathcal{R}$
+}
+\Output{
+    Optimal driver--zone assignment mapping $\mathbf{A}^*$
+}
+
+\BlankLine
+\For{each driver $d_i \in \mathcal{D}$ and H3 cell $h_j \in \mathcal{H}$}{
+    Compute days served $S_{ij}$ and total orders delivered $O_{ij}$ from $\mathcal{R}$\;\\
+    Calculate H3-cell familiarity score $F_{ij}$ using the weighted formulation\;
+}
+
+\BlankLine
+\For{each driver $d_i \in \mathcal{D}$ and operational zone $Z_k \in \mathcal{Z}$}{
+    Aggregate cell familiarity scores across constituent cells:
+    \[
+    F_{ik}^{\mathrm{zone}} \leftarrow \frac{1}{|Z_k|} \sum_{h_j \in Z_k} F_{ij}
+    \]
+}
+
+\BlankLine
+Construct driver--zone familiarity matrix $\mathbf{F}^{\mathrm{zone}} = [F_{ik}^{\mathrm{zone}}]_{|\mathcal{D}| \times |\mathcal{Z}|}$\;\\
+Convert to assignment cost matrix $\mathbf{C} = [C_{ik}]$ via cost transformation:
+\[
+C_{ik} \leftarrow F_{\max} - F_{ik}^{\mathrm{zone}}
+\]
+
+\BlankLine
+Execute Hungarian Algorithm on cost matrix $\mathbf{C}$ to find min-cost bipartite matching\;\\
+\Return{Optimal driver--zone assignments $\mathbf{A}^*$}\;
+\caption{Driver--Zone Assignment Algorithm}
+\label{alg:zone_assignment}
+\end{algorithm}
+
+\subsubsection{Computational Complexity}
+Let $n$ denote the number of available drivers and $m$ the number of operational zones. Computing the driver familiarity scores and constructing the driver--zone assignment cost matrix requires evaluating each driver--zone pair, resulting in a time complexity of $\mathcal{O}(nm)$. 
+
+The assignment problem is subsequently solved using the Hungarian Algorithm, which exhibits a worst-case polynomial time complexity of
+
+\begin{equation}
+\mathcal{O}(k^3),
+\end{equation}
+
+where $k = \max(n, m)$. The overall computational complexity of the proposed zone assignment layer is therefore dominated by the Hungarian optimization step, while the space complexity remains bounded by $\mathcal{O}(nm)$ to store the cost matrix. This polynomial-time efficiency ensures seamless applicability for real-time driver--zone assignment in large-scale last-mile delivery operations.
+
+\subsection{Experimental Results and Discussion}
+The proposed zone assignment framework was evaluated to assess its effectiveness in allocating operational zones to drivers based on historical familiarity. The experiments focused on analyzing familiarity patterns, validating the assignment strategy, and evaluating the quality of the resulting driver--zone allocations.
+
+\subsubsection{Driver Familiarity Analysis}
+Historical delivery records were used to compute familiarity scores for each driver across the operational zones generated by the Adaptive H3 Spatial Indexing layer. The resulting familiarity matrix exhibited clear variations in driver experience, indicating that drivers repeatedly served specific geographical regions over time.
+
+\begin{table}[htbp]
+\centering
+\caption{Zone Assignment Dataset Summary}
+\label{tab:zone_assignment_summary}
+\begin{tabular}{lr}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Available Drivers & 1,322 \\
+H3 Cells & 4,178 \\
+Driver--Cell Records & 21,322 \\
+Mean Familiarity Score & 0.1880 \\
+Median Familiarity Score & 0.0524 \\
+Maximum Familiarity Score & 1.0000 \\
+Mean Days Served & 17.60 \\
+Mean Orders Served & 83.30 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The familiarity dataset consists of 21,322 historical driver--cell records spanning 1,322 drivers and 4,178 H3 cells. The mean familiarity score of 0.1880 and median score of 0.0524 indicate that while most drivers possess familiarity with only a limited number of cells, a smaller subset has accumulated substantial experience in specific regions. The maximum familiarity score of 1.0000 confirms the presence of drivers with complete historical familiarity for certain cells. On average, each driver served a cell on 17.60 working days and completed 83.30 deliveries within that cell, providing sufficient historical information to estimate driver familiarity for the subsequent zone assignment process.
+
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\linewidth]{driver_cell_familiarity_heatmap.png}
+    \caption{Driver Familiarity Heatmap.}
+    \label{fig:driver_familiarity_heatmap}
+\end{figure}
+
+The analysis highlights the importance of incorporating historical operational knowledge into the assignment process, enabling drivers to be allocated to zones with which they are most familiar.
+
+\subsubsection{Assignment Performance}
+The Hungarian Algorithm successfully generated an optimal one-to-one assignment between available drivers and operational zones while satisfying all assignment constraints. Each operational zone was assigned exactly one driver, and no driver was allocated to multiple zones within a single assignment cycle.
+
+\begin{table}[H]
+\centering
+\label{tab:driver_cell_familiarity_excerpt}
+\caption{Representative excerpt of the driver--cell familiarity matrix.}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Driver ID} & \textbf{Cell 1} & \textbf{Cell 2} & \textbf{Cell 3} \\
+\midrule
+15 & 0.016 & 0.000 & 0.000 \\
+833 & 0.004 & 0.711 & 0.012 \\
+957 & 0.506 & 0.000 & 0.004 \\
+1393 & 0.000 & 0.607 & 0.078 \\
+2261 & 0.000 & 0.715 & 0.038 \\
+2356 & 0.000 & 0.000 & 0.025 \\
+3483 & 0.004 & 0.004 & 0.000 \\
+4733 & 0.770 & 0.768 & 0.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Rows correspond to drivers and columns represent selected H3 cells frequently visited by the active driver subset. Each entry denotes the computed familiarity score, where higher values indicate stronger historical familiarity and a value of 0 indicates no recorded familiarity for that driver--cell pair.
+
+% --- REMINDER BOX ---
+\begin{blockquote}
+\textbf{TODO / Reminder:} Include empirical runtime and performance metrics of the Hungarian Algorithm (e.g., execution time vs. matrix dimensions $N \times M$, memory overhead, and comparison against baseline assignment heuristics).
+\end{blockquote}
+
+The resulting assignments consistently favored drivers with higher familiarity, producing operationally efficient driver--zone allocations.
+
+
+
+
+\subsubsection{Discussion}
+The experimental results demonstrate that the proposed framework effectively leverages historical familiarity for driver–zone assignment while achieving computational efficiency through the Hungarian algorithm. The modular design enables additional factors, such as vehicle type, driver availability, traffic conditions, and route complexity, to be incorporated into the assignment process. However, the current framework relies solely on historical familiarity and does not account for real-time operational conditions. Incorporating dynamic traffic information and adaptive reassignment strategies presents a promising direction for future research.
+
+\section{Event-Driven Simulation Engine}
+\label{sec:event_driven_simulation_engine}
+
+\subsection{Layer Overview}
+\label{subsec:simulation_layer_overview}
+
+The Adaptive H3 Spatial Indexing, Demand Forecasting, Dispatch Optimization, and Zone Assignment layers form the core decision-making components of the proposed framework. To evaluate their integrated operation, an event-driven simulation engine was developed that provides a unified execution environment for all optimization modules.
+
+The simulation engine models the delivery workflow from customer order placement to driver assignment and delivery execution by processing events sequentially. As new orders arrive, system states are updated and propagated across the optimization layers, enabling each module to operate on current operational information.
+
+Rather than performing optimization itself, the simulation engine coordinates the execution of all proposed layers, facilitating end-to-end validation of the complete delivery optimization framework under realistic operational conditions.
+
+\subsection{Simulation Components}
+\label{subsec:simulation_components}
+
+The simulation engine consists of several interconnected modules that collectively manage event execution, system state, and communication between optimization layers.
+
+\paragraph{Event Scheduler}
+Executes simulation events in chronological order, including customer order arrivals, dispatch operations, driver assignments, and delivery completions.
+
+\paragraph{Order Manager}
+Creates, validates, and tracks customer orders throughout their lifecycle, from placement to delivery completion.
+
+\paragraph{Driver Manager}
+Maintains driver availability, current assignments, and delivery status. Following delivery completion, driver states are updated to enable future zone assignments.
+
+\paragraph{Zone Manager}
+Maintains the operational zones generated by the AHSI layer and provides the spatial information required for driver allocation and dispatch operations.
+
+\paragraph{Dispatch Center Manager}
+Tracks dispatch center inventories, active delivery batches, and storage utilization, supplying the operational information required by the dispatch optimization layer.
+
+\paragraph{State Manager}
+Maintains the global simulation state by integrating information from orders, drivers, operational zones, dispatch centers, and completed deliveries. All optimization layers obtain their required inputs from this centralized state.
+
+\paragraph{Optimization Pipeline}
+The optimization layers are implemented as independent modules coordinated by the simulation engine. Their execution follows the sequence illustrated in Figure~\ref{fig:optimization_pipeline_sequence}, preserving a clear separation between simulation logic and optimization.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=0.8cm,
+    font=\small\sffamily,
+    % Style definitions
+    state_block/.style={
+        rectangle, 
+        draw=gray!70, 
+        fill=gray!10, 
+        thick, 
+        rounded corners=3pt, 
+        align=center, 
+        inner sep=7pt, 
+        minimum width=5.0cm
+    },
+    module_block/.style={
+        rectangle, 
+        draw=blue!80!black, 
+        fill=blue!5, 
+        thick, 
+        rounded corners=3pt, 
+        align=center, 
+        inner sep=7pt, 
+        minimum width=5.0cm
+    },
+    line/.style={
+        -Stealth, 
+        thick, 
+        draw=gray!80!black
+    }
+]
+
+    % --- PIPELINE NODES ---
+    \node [state_block] (init_state) {Simulation State};
+    \node [module_block, below=of init_state] (ahsi) {AHSI (Adaptive H3 Spatial Indexing)};
+    \node [module_block, below=of ahsi] (forecast) {Demand Forecasting};
+    \node [module_block, below=of forecast] (dispatch) {Dispatch Optimization};
+    \node [module_block, below=of dispatch] (assignment) {Zone Assignment};
+    \node [state_block, below=of assignment] (updated_state) {Updated Simulation State};
+
+    % --- CONNECTIONS ---
+    \path [line] (init_state) -- (ahsi);
+    \path [line] (ahsi) -- (forecast);
+    \path [line] (forecast) -- (dispatch);
+    \path [line] (dispatch) -- (assignment);
+    \path [line] (assignment) -- (updated_state);
+
+\end{tikzpicture}
+\caption{Sequential execution workflow of optimization modules within the simulation engine.}
+\label{fig:optimization_pipeline_sequence}
+\end{figure}
+
+\section{Challenges and Learning Outcomes}
+\label{sec:challenges_and_learning_outcomes}
+
+The major challenges encountered during the internship are summarized as follows:
+
+\begin{itemize}
+    \item \textbf{Integration Complexity:} Although each optimization layer was independently designed and validated, integrating them into a unified event-driven simulation proved significantly more challenging than their individual development.
+    \item \textbf{State Inconsistencies:} Continuous modifications across interconnected modules resulted in inconsistencies in the shared simulation state, particularly in maintaining synchronized information related to customer orders, driver availability, operational zones, dispatch batches, and delivery events.
+    \item \textbf{Cascading Dependencies:} Changes introduced in one optimization layer frequently propagated to other modules, requiring repeated updates to interfaces and increasing debugging complexity.
+\end{itemize}
+
+The internship provided several important learning outcomes:
+
+\begin{itemize}
+    \item Strengthened understanding of modular software architecture and component-based system design.
+    \item Gained practical experience in implementing machine learning models, optimization algorithms, and event-driven simulation.
+    \item Developed a deeper appreciation for centralized state management, interface standardization, and module interoperability in large-scale software systems.
+    \item Reinforced the importance of incremental integration, continuous validation, and systematic debugging during complex software development.
+\end{itemize}
+
+
+\section{Conclusion}
+
+\subsection{Major Contributions}
+The major contributions of this work are summarized below:
+
+\begin{itemize}
+    \item \textbf{Adaptive H3 Spatial Indexing (AHSI):} Proposed and implemented an adaptive spatial partitioning algorithm that dynamically merges sparse demand regions and splits high-density hotspots into balanced operational delivery zones.
+    \item \textbf{LSTM-Based Demand Forecasting:} Developed a deep learning model for shift-wise demand prediction across spatial units to enable proactive resource allocation.
+    \item \textbf{Objective-Based Zone Assignment:} Formulated a multi-objective optimization model that balances driver spatial familiarity ($\alpha = 0.7$) and estimated zone workload ($\beta = 0.3$) for efficient driver-to-zone allocation.
+    \item \textbf{Priority-Based Dispatch Engine:} Designed a multi-stage dispatch decision engine incorporating vehicle capacity constraints, minimum capacity utilization bounds ($80\%$), and storage safety thresholds.
+    \item \textbf{Event-Driven Simulation Engine:} Implemented a modular, event-driven simulation pipeline integrating spatial indexing, forecasting, zone assignment, and dispatch planning into a unified evaluation environment.
+\end{itemize}
+
+Collectively, these contributions demonstrate a modular, data-driven approach toward intelligent decision support in last-mile delivery operations.
+
+\subsection{Limitations and Future Work}
+While the proposed framework offers a robust multi-layer decision pipeline, several operational limitations remain to be addressed in future research:
+
+\begin{itemize}
+    \item \textbf{Operational Assumptions:} The current simulation environment relies on estimated service times and spatial distance metrics without real-world street-level routing and live traffic data.
+    \item \textbf{Dynamic Adaptability:} Spatial boundaries and driver-zone assignments are evaluated on a shift-by-shift basis rather than continuously adapting to intra-shift demand surges.
+    \item \textbf{Fleet Homogeneity:} The dispatch strategy primarily models fixed vehicle capacities without accounting for dynamic multi-depot routing or complex heterogeneous fleet constraints.
+\end{itemize}
+
+\textbf{Future Directions:} Future work can focus on incorporating real-time traffic and routing APIs, online demand updating, reinforcement learning-based dispatch strategies, and validating the framework against real-world enterprise delivery logs.
+
+\subsection{Final Remarks}
+This project investigated the integration of spatial indexing, time-series deep learning, operational research optimization, and event-driven simulation into a unified last-mile delivery framework. 
+
+The resulting architecture demonstrates how discrete optimization layers—from spatial zone creation to vehicle dispatching—can operate cohesively to improve operational efficiency. Although evaluated within a simulated environment, the modular structure provides a scalable and flexible foundation for future research and practical deployment in intelligent logistics systems.
+
+% Ensure \usepackage{hyperref} is included in your thesis preamble
+% \usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+\newpage
+\section*{References}
+
+\subsection*{Dataset \& Spatial Indexing}
+\begin{itemize}
+    \item \textbf{Li et al.} --- \textit{LaDe: A Large-Scale Benchmark for Last-mile Delivery Optimization} (2021). \href{https://arxiv.org/abs/2106.04018}{\nolinkurl{arXiv:2106.04018}}
+    \item \textbf{Uber Technologies} --- \textit{H3: Hexagonal Hierarchical Geospatial Indexing}. \href{https://h3geo.org/}{\nolinkurl{h3geo.org}} | \href{https://github.com/uber/h3}{GitHub Repository}
+    \item \textbf{Uber Technologies} --- \textit{H3-Py Documentation}. \href{https://uber.github.io/h3-py/}{\nolinkurl{uber.github.io/h3-py}}
+\end{itemize}
+
+\subsection*{Demand Forecasting}
+\begin{itemize}
+    \item \textbf{Hochreiter \& Schmidhuber} --- \textit{Long Short-Term Memory} (1997). \href{https://doi.org/10.1162/neco.1997.9.8.1735}{\nolinkurl{doi:10.1162/neco.1997.9.8.1735}}
+    \item \textbf{Goodfellow, Bengio \& Courville} --- \textit{Deep Learning} (2016). \href{https://www.deeplearningbook.org/}{\nolinkurl{deeplearningbook.org}}
+    \item \textbf{Hyndman \& Athanasopoulos} --- \textit{Forecasting: Principles and Practice} (3rd ed.). \href{https://otexts.com/fpp3/}{\nolinkurl{otexts.com/fpp3}}
+\end{itemize}
+
+\subsection*{Optimization \& Assignment}
+\begin{itemize}
+    \item \textbf{Kuhn} --- \textit{The Hungarian Method for the Assignment Problem} (1955). \href{https://doi.org/10.1007/978-3-540-68279-0_2}{\nolinkurl{doi:10.1007/978-3-540-68279-0_2}}
+    \item \textbf{Munkres} --- \textit{Algorithms for the Assignment and Transportation Problems} (1957). \href{https://doi.org/10.1137/0105003}{\nolinkurl{doi:10.1137/0105003}}
+    \item \textbf{Bertsimas \& Tsitsiklis} --- \textit{Introduction to Linear Optimization} (1997). \href{https://athenasc.com/linopt.html}{\nolinkurl{athenasc.com/linopt}}
+    \item \textbf{Nemhauser \& Wolsey} --- \textit{Integer and Combinatorial Optimization} (1988). \href{https://doi.org/10.1002/9781118627372}{\nolinkurl{doi:10.1002/9781118627372}}
+\end{itemize}
+
+\subsection*{Last-Mile Delivery}
+\begin{itemize}
+    \item \textbf{Boysen et al.} --- \textit{Last-mile delivery concepts: a survey from an operational research perspective} (2021). \href{https://doi.org/10.1007/s00291-020-00607-8}{\nolinkurl{doi:10.1007/s00291-020-00607-8}}
+    \item \textbf{Savelsbergh \& Van Woensel} --- \textit{City Logistics: Challenges and Opportunities} (2016). \href{https://doi.org/10.1287/trsc.2016.0675}{\nolinkurl{doi:10.1287/trsc.2016.0675}}
+    \item \textbf{Ulmer} --- \textit{Dynamic Decision Making in Last-Mile Delivery} (2020). \href{https://doi.org/10.1007/978-3-030-34824-3}{\nolinkurl{doi:10.1007/978-3-030-34824-3}}
+    \item \textbf{Toth \& Vigo} --- \textit{Vehicle Routing: Problems, Methods, and Applications} (2nd ed., 2014). \href{https://doi.org/10.1137/1.9781611973594}{\nolinkurl{doi:10.1137/1.9781611973594}}
+\end{itemize}
+
+\subsection*{Software Frameworks}
+\begin{itemize}
+    \item \textbf{Harris et al.} --- \textit{Array programming with NumPy} (2020). \href{https://doi.org/10.1038/s41586-020-2649-2}{\nolinkurl{doi:10.1038/s41586-020-2649-2}}
+    \item \textbf{The Pandas Development Team} --- \textit{Pandas Documentation}. \href{https://pandas.pydata.org/}{\nolinkurl{pandas.pydata.org}}
+    \item \textbf{Paszke et al.} --- \textit{PyTorch: An Imperative Style, High-Performance Deep Learning Library} (2019). \href{https://proceedings.neurips.cc/paper/2019/hash/bdb106a070e5b8f8a47d77f06e54613a-Abstract.html}{NeurIPS 2019}
+    \item \textbf{Pedregosa et al.} --- \textit{Scikit-learn: Machine Learning in Python} (2011). \href{https://www.jmlr.org/papers/v12/pedregosa11a.html}{JMLR v12}
+    \item \textbf{Virtanen et al.} --- \textit{SciPy 1.0: Fundamental Algorithms for Scientific Computing in Python} (2020). \href{https://doi.org/10.1038/s41592-019-0686-2}{\nolinkurl{doi:10.1038/s41592-019-0686-2}}
+    \item \textbf{Mitchell et al.} --- \textit{PuLP: A Linear Programming Modeling Language in Python}. \href{https://coin-or.github.io/pulp/}{\nolinkurl{coin-or.github.io/pulp}}
+\end{itemize}
+
+\newpage
+\section*{Appendix A: System Configuration}
+
+\subsection*{A.1 Adaptive H3 Spatial Indexing (AHSI)}
+\begin{table}[htbp]
+\centering
+\caption{AHSI System Parameters}
+\label{tab:ahsi_config}
+\begin{tabular}{ll}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+H3 Resolution & 8 \\
+Spatial Index & Uber H3 \\
+Input & Customer GPS Coordinates \\
+Output & H3 Cell IDs / Operational Zones \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{A.2 Demand Forecasting}
+\begin{table}[htbp]
+\centering
+\caption{Demand Forecasting Configuration}
+\label{tab:forecasting_config}
+\begin{tabularx}{\linewidth}{l X}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Forecasting Model & LSTM \\
+Lookback Window & 12 Shifts \\
+Input Features & Demand, Rolling Mean (3), Rolling Std (3), Demand Difference, Growth Rate, Shift ID, Day-of-Week (Sin), Day-of-Week (Cos), Weekend Indicator, Day Index \\
+Number of Features & 10 \\
+Train / Validation / Test Split & 128 / 28 / 28 Days \\
+Loss Function & Mean Squared Error (MSE) \\
+Optimizer & Adam \\
+Scaling Method & Min-Max Normalization \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection*{A.3 Dispatch Optimization}
+
+\subsubsection*{Vehicle Configuration}
+\begin{table}[htbp]
+\centering
+\caption{Vehicle Operational Parameters}
+\label{tab:vehicle_config}
+\begin{tabular}{ll}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Bike Capacity & 20 Units \\
+Van Capacity & 100 Units \\
+Minimum Vehicle Utilization & 0.80 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Dispatch Centre Configuration}
+\begin{table}[htbp]
+\centering
+\caption{Dispatch Centre Operational Parameters}
+\label{tab:dispatch_centre_config}
+\begin{tabular}{ll}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Storage Capacity & 5000 Units \\
+Warning Threshold & 0.80 \\
+Critical Threshold & 0.95 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{Batch Utility Score (BUS) Weights}
+\begin{table}[htbp]
+\centering
+\caption{BUS Component Weight Weights}
+\label{tab:bus_weights}
+\begin{tabular}{ll}
+\toprule
+\textbf{Component} & \textbf{Weight} \\
+\midrule
+Batch Priority & 0.35 \\
+Vehicle Utilization & 0.20 \\
+Storage Pressure & 0.15 \\
+Retention Cost & 0.20 \\
+Forecast Opportunity & 0.10 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{A.4 Driver--Zone Assignment}
+\begin{table}[htbp]
+\centering
+\caption{Driver--Zone Assignment Configuration}
+\label{tab:driver_zone_config}
+\begin{tabular}{ll}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Familiarity Weight ($\alpha$) & 0.70 \\
+Workload Balance Weight ($1 - \alpha$) & 0.30 \\
+Familiarity Resolution & H3 Resolution 8 \\
+Workload Estimation & Mean Historical Service Time \\
+Assignment Algorithm & Hungarian Algorithm \\
+Assignment Constraint & One Driver per Operational Zone \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+
+% ==============================================================================
+% APPENDIX B: ALGORITHMS
+% ==============================================================================
+\section*{Appendix B: Algorithms}
+\addcontentsline{toc}{section}{Appendix B: Algorithms}
+
+\begin{enumerate}
+    \item \textbf{AHSI Seed Initialization} --- \ref{alg:ahsi_seed_initialization}
+    \item \textbf{AHSI Simultaneous Region Growing} --- \ref{alg:ahsi_simultaneous_region_growing}
+    \item \textbf{AHSI Boundary Refinement} --- \ref{alg:ahsi_boundary_refinement}
+    \item \textbf{LSTM-Based Shift-wise Demand Forecasting} --- \ref{alg:lstm_demand_forecasting}
+    \item \textbf{EPS-Based Batch Formation} --- \ref{alg:eps_batch_formation}
+    \item \textbf{BUS-Based Dispatch Optimization} --- \ref{alg:bus_dispatch_optimization}
+    \item \textbf{Driver–Zone Assignment using the Hungarian Algorithm} --- \ref{alg:zone_assignment}
+\end{enumerate} 
+
+
+% ==============================================================================
+% APPENDIX C: DATASET SCHEMA
+% ==============================================================================
+\section*{Appendix C: Dataset Schema}
+\addcontentsline{toc}{section}{Appendix C: Dataset Schema}
+
+Table~\ref{tab:dataset_schema} presents the operational dataset schema used for spatial-temporal modeling, demand forecasting, and dispatch optimization.
+
+\begin{table}[H]
+\centering
+\caption{Dataset Schema}
+\label{tab:dataset_schema}
+\small
+\begin{tabularx}{\textwidth}{l l X}
+\hline
+\textbf{Field Name} & \textbf{Type} & \textbf{Description} \\
+\hline
+\texttt{order\_id} & String & Unique order identifier \\
+\texttt{courier\_id} & String & Assigned courier identifier \\
+\texttt{accept\_timestamp} & Datetime & Order acceptance timestamp \\
+\texttt{latitude} & Float64 & Delivery latitude \\
+\texttt{longitude} & Float64 & Delivery longitude \\
+\texttt{h3\_cell\_8} & String & H3 spatial index (Resolution 8) \\
+\texttt{operational\_zone} & String & Assigned operational zone \\
+\texttt{shift\_id} & Integer & Operational shift identifier \\
+\texttt{day\_of\_week} & Integer & Day of week ($0 = \text{Monday}$, $6 = \text{Sunday}$) \\
+\texttt{is\_weekend} & Boolean & Weekend indicator \\
+\texttt{day\_index} & Integer & Sequential operational day index \\
+\texttt{demand} & Integer & Shift-wise demand \\
+\hline
+\end{tabularx}
+\end{table}
+
+% ==============================================================================
+% APPENDIX D: MODEL CONFIGURATION
+% ==============================================================================
+\section*{Appendix D: Model Configuration and Execution Environment}
+\addcontentsline{toc}{section}{Appendix D: Model Configuration and Execution Environment}
+\label{app:model_configuration}
+
+\subsection*{D.1 LSTM Architecture Details}
+\begin{table}[H]
+\centering
+\caption{LSTM Model Hyperparameters}
+\label{tab:lstm_config}
+\begin{tabular}{ll}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Forecasting Model & LSTM \\
+Input Features & 10 \\
+Lookback Window & 12 Shifts \\
+LSTM Layers & 2 \\
+Hidden Units & 64 \\
+Dropout Rate & 0.20 \\
+Fully Connected Layers & $64 \to 32 \to 1$ \\
+Batch Size & 1024 \\
+Optimizer & Adam \\
+Learning Rate & 0.001 \\
+Loss Function & Mean Squared Error (MSE) \\
+Early Stopping & Patience = 3 Epochs \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{D.2 Hardware and Software Specifications}
+\begin{table}[H]
+\centering
+\caption{Execution Environment Details}
+\label{tab:execution_environment}
+\begin{tabular}{ll}
+\toprule
+\textbf{Component} & \textbf{Specification} \\
+\midrule
+Training Platform & Google Colab \\
+Operating Environment & Ubuntu 22.04 LTS (Google Colab Runtime) \\
+Python Version & 3.10 \\
+Deep Learning Framework & PyTorch 2.2.1 \\
+Spatial Indexing Library & \texttt{h3-py} 3.7.6 \\
+Numerical Computing & NumPy 1.26.4 \\
+Data Processing & Pandas 2.2.1 \\
+Machine Learning Utilities & Scikit-learn 1.4.1.post1 \\
+Scientific Computing & SciPy 1.12.x \\
+Optimization Library & PuLP 2.x \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+% ==============================================================================
+% APPENDIX E: ADDITIONAL EXPERIMENTAL RESULTS
+% ==============================================================================
+\section{Additional Experimental Results}
+\label{app:additional_experimental_results}
+
+The following experimental visualizations support the core performance analysis presented across the main report:
+
+\subsection{Adaptive H3 Spatial Indexing (AHSI)}
+\begin{itemize}
+    \item \textbf{H3 Demand Distribution (Before Filtering):} Heatmap illustrating raw spatial demand noise across uniform Resolution 7 cells.
+    \item \textbf{H3 Demand Distribution (After Filtering):} Spatial density plots following low-volume cell removal.
+    \item \textbf{Sparse Cell Merge Examples:} Detailed layout showing multi-cell cluster merges into unified high-level spatial regions.
+    \item \textbf{Hotspot Split Examples:} Visualization of high-density Resolution 7 cells partitioned into Resolution 8 child cells.
+    \item \textbf{Final Operational Zone Distribution:} Map displaying the generated heterogeneous operational boundaries.
+\end{itemize}
+
+\subsection{Demand Forecasting}
+\begin{itemize}
+    \item \textbf{Training and Validation Loss Curves:} Convergence trajectories over 100 epochs with early stopping checkpoints.
+    \item \textbf{Actual vs. Predicted Demand:} Shift-by-shift time-series overlays across high-volume operational zones.
+    \item \textbf{Prediction Error Distribution:} Frequency distribution of model residuals ($\hat{y} - y$).
+    \item \textbf{Residual Analysis:} Scatter plots evaluating error independence against shift indices and day types.
+\end{itemize}
+
+\subsection{Zone Assignment}
+\begin{itemize}
+    \item \textbf{Driver Familiarity Distribution:} Histogram of historical driver-zone familiarity values.
+    \item \textbf{Zone Workload Distribution:} Comparison of estimated order-handling times across generated zones.
+    \item \textbf{Driver Workload Balance:} Variance analysis of assigned driver duties under objective-based optimization.
+    \item \textbf{Familiarity Score Heatmap:} Cross-matrix mapping driver familiarity metrics against zone IDs.
+\end{itemize}
+
+\subsection{Dispatch Engine}
+\begin{itemize}
+    \item \textbf{Batch Size Distribution:} Histogram of order counts contained within formed delivery batches.
+    \item \textbf{Vehicle Utilization Distribution:} Percentage distribution of filled capacity across vans and bikes.
+    \item \textbf{Dispatch Decision Statistics:} Breakdown of dispatched vs. retained batches across operational shifts.
+    \item \textbf{Dispatch Score Distribution:} Histogram of calculated batch priority scores prior to scheduling.
+\end{itemize}
+
+
+% ==============================================================================
+% APPENDIX F: HYPERPARAMETER SUMMARY
+% ==============================================================================
+\section{Hyperparameter Summary}
+\label{app:hyperparameter_summary}
+
+A consolidated reference table summarizing all system parameters and operational thresholds across the framework.
+
+\begin{table}[htbp]
+\centering
+\caption{Consolidated Framework Hyperparameter Summary}
+\label{tab:hyperparameter_summary}
+\begin{tabular}{lll}
+\hline
+\textbf{Module} & \textbf{Hyperparameter} & \textbf{Value} \\ \hline
+\textbf{AHSI} & Base H3 Resolution & 7 \\
+ & Max H3 Resolution & 8 \\
+\textbf{Demand Forecasting} & Lookback Window ($L$) & 12 Shifts \\
+ & LSTM Hidden Units & 64 \\
+ & Learning Rate & 0.001 \\
+ & Batch Size & 32 \\
+ & Dropout Rate & 0.20 \\ \hline
+\textbf{Zone Assignment} & Familiarity Weight ($\alpha$) & 0.70 \\
+ & Workload Weight ($\beta$) & 0.30 \\ \hline
+\textbf{Dispatch Engine} & Van Capacity & 100 Units \\
+ & Bike Capacity & 20 Units \\
+ & Min Utilization Threshold & 80\% \\
+ & Warning Storage Threshold & 80\% \\
+ & Critical Storage Threshold & 95\% \\ \hline
+\textbf{Simulation} & Time Step Interval & 1 Shift \\
+ & Warm-up Period & 14 Days \\ \hline
+\end{tabular}
+\end{table}
+\end{document}
