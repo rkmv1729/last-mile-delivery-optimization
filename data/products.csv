@@ -1,0 +1,251 @@
+product_id,product_name,category,priority_score,load_factor
+1001,Paracetamol 500mg Strip,Medicines,0.93,0.35
+1002,Azithromycin 250mg Strip,Medicines,0.92,0.35
+1003,Amoxicillin 500mg Capsules,Medicines,0.95,0.38
+1004,Metformin 500mg Tablets,Medicines,0.91,0.4
+1005,Amlodipine 5mg Tablets,Medicines,0.95,0.38
+1006,Cetirizine 10mg Tablets,Medicines,0.89,0.32
+1007,Insulin Glargine Injection,Medicines,0.91,0.45
+1008,ORS Rehydration Sachets,Medicines,0.92,0.4
+1009,Digene Antacid Tablets,Medicines,0.83,0.45
+1010,Crocin Advance Tablets,Medicines,0.92,0.38
+1011,Combiflam Tablets,Medicines,0.88,0.4
+1012,Betadine Antiseptic Solution,Medicines,0.87,0.55
+1013,First Aid Bandage Roll,Medicines,0.89,0.35
+1014,Sterile Gauze Pads,Medicines,0.93,0.3
+1015,Digital Thermometer,Medicines,0.85,0.5
+1016,Dettol Antiseptic Liquid,Medicines,0.87,0.6
+1017,Volini Pain Relief Spray,Medicines,0.88,0.45
+1018,Vicks Vaporub,Medicines,0.9,0.4
+1019,Glucometer Test Strips,Medicines,0.92,0.35
+1020,Saline Nasal Drops,Medicines,0.87,0.35
+1021,Vicks Cough Drops,Medicines,0.89,0.3
+1022,Band-Aid Adhesive Bandages,Medicines,0.84,0.3
+1023,Nestle Cerelac Baby Cereal,Baby Care,0.9,1.6
+1024,Similac Infant Formula,Baby Care,0.9,1.7
+1025,Lactogen Infant Formula,Baby Care,0.88,1.6
+1026,Pampers Baby Dry Diapers,Baby Care,0.84,3.0
+1027,Huggies Wonder Pants Diapers,Baby Care,0.86,3.2
+1028,MamyPoko Pants Diapers,Baby Care,0.9,3.1
+1029,Johnson's Baby Powder,Baby Care,0.57,0.7
+1030,Johnson's Baby Shampoo,Baby Care,0.61,0.85
+1031,Baby Wet Wipes Pack,Baby Care,0.86,1.0
+1032,Himalaya Baby Lotion,Baby Care,0.57,0.8
+1033,Baby Diaper Rash Cream,Baby Care,0.86,0.6
+1034,Chicco Baby Feeding Bottle,Baby Care,0.51,0.55
+1035,Baby Wheat Cereal Mix,Baby Care,0.81,1.5
+1036,Chicco Baby Soap,Baby Care,0.53,0.45
+1037,Baby Diaper Pants Large Pack,Baby Care,0.89,3.3
+1038,Baby Talcum Powder,Baby Care,0.57,0.7
+1039,Amul Toned Milk 1L,Dairy & Eggs,0.88,1.1
+1040,Mother Dairy Full Cream Milk 1L,Dairy & Eggs,0.92,1.2
+1041,Nandini Fresh Milk 500ml,Dairy & Eggs,0.9,0.7
+1042,Amul Butter 500g,Dairy & Eggs,0.81,0.6
+1043,Amul Cheese Slices,Dairy & Eggs,0.83,0.55
+1044,Nestle Dahi Curd 400g,Dairy & Eggs,0.9,0.85
+1045,Mother Dairy Paneer 200g,Dairy & Eggs,0.81,0.5
+1046,Farm Fresh Brown Eggs 12pc,Dairy & Eggs,0.89,1.3
+1047,Farm Fresh White Eggs 6pc,Dairy & Eggs,0.87,0.85
+1048,Amul Fresh Cream 200ml,Dairy & Eggs,0.82,0.55
+1049,Go Cheese Mozzarella Block,Dairy & Eggs,0.81,0.6
+1050,Amul Lassi 200ml,Dairy & Eggs,0.73,0.5
+1051,Britannia Cheese Spread,Dairy & Eggs,0.81,0.5
+1052,Mother Dairy Toned Curd 1kg,Dairy & Eggs,0.83,1.1
+1053,Britannia White Bread,Bakery,0.85,0.9
+1054,Modern Whole Wheat Bread,Bakery,0.89,0.95
+1055,Harvest Gold Brown Bread,Bakery,0.82,0.85
+1056,Multigrain Bread Loaf,Bakery,0.85,0.9
+1057,Britannia Bourbon Biscuits,Bakery,0.5,0.45
+1058,Fresh Bakery Pav Pack of 6,Bakery,0.85,0.75
+1059,Fresh Cream Bun Pack of 4,Bakery,0.83,0.65
+1060,Chocolate Muffins Pack of 2,Bakery,0.73,0.55
+1061,Garlic Bread Loaf,Bakery,0.82,0.9
+1062,Fresh Croissants Pack of 2,Bakery,0.77,0.6
+1063,Digestive Biscuits,Bakery,0.57,0.4
+1064,Rusk Toast Pack,Bakery,0.69,0.5
+1065,Fresh Bananas 1 Dozen,Fruits,0.85,1.2
+1066,Fresh Apples Shimla 1kg,Fruits,0.83,1.1
+1067,Fresh Alphonso Mangoes 1kg,Fruits,0.88,1.15
+1068,Fresh Oranges 1kg,Fruits,0.86,1.1
+1069,Fresh Papaya 1pc,Fruits,0.81,1.5
+1070,Fresh Watermelon 1pc,Fruits,0.84,3.0
+1071,Fresh Green Grapes 500g,Fruits,0.79,0.7
+1072,Fresh Pomegranate 1kg,Fruits,0.86,1.1
+1073,Fresh Pineapple 1pc,Fruits,0.81,1.6
+1074,Fresh Kiwi 4pcs,Fruits,0.87,0.6
+1075,Fresh Guava 500g,Fruits,0.83,0.65
+1076,Fresh Sweet Lime Mosambi 1kg,Fruits,0.79,1.0
+1077,Fresh Pears 500g,Fruits,0.81,0.65
+1078,Fresh Strawberries 200g,Fruits,0.87,0.55
+1079,Fresh Tomatoes 1kg,Vegetables,0.78,1.1
+1080,Fresh Onions 1kg,Vegetables,0.82,1.1
+1081,Fresh Potatoes 1kg,Vegetables,0.77,1.15
+1082,Fresh Green Capsicum 500g,Vegetables,0.77,0.65
+1083,Fresh Carrots 500g,Vegetables,0.78,0.65
+1084,Fresh Cauliflower 1pc,Vegetables,0.83,1.2
+1085,Fresh Cabbage 1pc,Vegetables,0.76,1.3
+1086,Fresh Spinach Bunch,Vegetables,0.81,0.4
+1087,Fresh Coriander Bunch,Vegetables,0.82,0.3
+1088,Fresh Green Chillies 250g,Vegetables,0.85,0.4
+1089,Fresh Ginger 250g,Vegetables,0.76,0.35
+1090,Fresh Garlic 250g,Vegetables,0.79,0.35
+1091,Fresh Cucumber 500g,Vegetables,0.81,0.7
+1092,Fresh Brinjal 500g,Vegetables,0.84,0.65
+1093,Fresh Beans 500g,Vegetables,0.84,0.65
+1094,Fresh Bottle Gourd 1pc,Vegetables,0.84,1.1
+1095,Tata Salt 1kg,Grocery Staples,0.63,1.0
+1096,India Gate Basmati Rice 5kg,Grocery Staples,0.67,4.0
+1097,Aashirvaad Atta 5kg,Grocery Staples,0.69,4.2
+1098,Fortune Sugar 1kg,Grocery Staples,0.7,1.0
+1099,Maida Refined Flour 1kg,Grocery Staples,0.68,0.9
+1100,Sooji Semolina 500g,Grocery Staples,0.59,0.65
+1101,Besan Gram Flour 1kg,Grocery Staples,0.61,0.9
+1102,Poha Flattened Rice 500g,Grocery Staples,0.6,0.6
+1103,MTR Rava Idli Mix,Grocery Staples,0.57,0.55
+1104,Daawat Sella Basmati Rice 1kg,Grocery Staples,0.67,0.9
+1105,Patanjali Atta 5kg,Grocery Staples,0.71,4.1
+1106,Jaggery Gur 500g,Grocery Staples,0.6,0.6
+1107,Toor Dal 1kg,Pulses & Grains,0.64,0.95
+1108,Moong Dal 1kg,Pulses & Grains,0.67,0.95
+1109,Chana Dal 1kg,Pulses & Grains,0.66,0.95
+1110,Masoor Dal 1kg,Pulses & Grains,0.68,0.95
+1111,Urad Dal 1kg,Pulses & Grains,0.71,0.95
+1112,Rajma Kidney Beans 1kg,Pulses & Grains,0.67,0.95
+1113,Kabuli Chana Chickpeas 1kg,Pulses & Grains,0.65,0.95
+1114,Whole Wheat 5kg,Pulses & Grains,0.71,3.8
+1115,Brown Rice 1kg,Pulses & Grains,0.68,0.9
+1116,Quinoa 500g,Pulses & Grains,0.6,0.6
+1117,Oats Rolled 1kg,Pulses & Grains,0.72,0.85
+1118,Sabudana Sago 500g,Pulses & Grains,0.65,0.55
+1119,Fortune Sunflower Oil 1L,Oils & Spices,0.72,1.4
+1120,Saffola Gold Oil 1L,Oils & Spices,0.72,1.4
+1121,Dhara Mustard Oil 1L,Oils & Spices,0.66,1.35
+1122,Idhayam Gingelly Oil 1L,Oils & Spices,0.64,1.3
+1123,MDH Garam Masala 100g,Oils & Spices,0.51,0.3
+1124,Everest Turmeric Powder 200g,Oils & Spices,0.57,0.35
+1125,Everest Red Chilli Powder 200g,Oils & Spices,0.52,0.35
+1126,MDH Coriander Powder 200g,Oils & Spices,0.51,0.3
+1127,Catch Black Pepper 100g,Oils & Spices,0.51,0.25
+1128,Tata Sampann Cumin Seeds 200g,Oils & Spices,0.52,0.3
+1129,Fortune Coconut Oil 500ml,Oils & Spices,0.64,0.8
+1130,Everest Chicken Masala 100g,Oils & Spices,0.51,0.3
+1131,Fresh Chicken Breast 500g,Meat & Seafood,0.76,0.85
+1132,Fresh Chicken Curry Cut 1kg,Meat & Seafood,0.79,1.3
+1133,Fresh Mutton Curry Cut 500g,Meat & Seafood,0.76,0.85
+1134,Fresh Rohu Fish 1kg,Meat & Seafood,0.78,1.3
+1135,Fresh Prawns 500g,Meat & Seafood,0.74,0.8
+1136,Fresh Pomfret Fish 500g,Meat & Seafood,0.82,0.9
+1137,Fresh Boneless Chicken 1kg,Meat & Seafood,0.83,1.4
+1138,Fresh Egg Whites 500ml,Meat & Seafood,0.72,0.7
+1139,Fresh Fish Fillet 500g,Meat & Seafood,0.76,0.85
+1140,Fresh Crab 500g,Meat & Seafood,0.75,0.85
+1141,McCain French Fries 500g,Frozen Foods,0.71,0.7
+1142,Frozen Green Peas 500g,Frozen Foods,0.66,0.65
+1143,Frozen Mixed Vegetables 500g,Frozen Foods,0.74,0.7
+1144,Sumeru Frozen Paratha 5pc,Frozen Foods,0.78,0.8
+1145,Frozen Chicken Nuggets 500g,Frozen Foods,0.74,0.7
+1146,Frozen Veg Momos 500g,Frozen Foods,0.73,0.75
+1147,ITC Frozen Spring Rolls,Frozen Foods,0.67,0.65
+1148,Frozen Sweet Corn 500g,Frozen Foods,0.66,0.65
+1149,Godrej Yummiez Chicken Cutlets,Frozen Foods,0.72,0.7
+1150,Frozen Paneer Tikka 500g,Frozen Foods,0.7,0.7
+1151,Lays Classic Salted Chips,Snacks,0.58,0.45
+1152,Kurkure Masala Munch,Snacks,0.51,0.4
+1153,Haldiram's Bhujia 200g,Snacks,0.51,0.5
+1154,Bingo Mad Angles,Snacks,0.58,0.45
+1155,Parle-G Biscuits,Snacks,0.58,0.35
+1156,Oreo Chocolate Biscuits,Snacks,0.51,0.4
+1157,Cadbury Dairy Milk Chocolate,Snacks,0.57,0.35
+1158,Haldiram's Aloo Bhujia,Snacks,0.51,0.5
+1159,Act II Popcorn Butter,Snacks,0.52,0.4
+1160,Sunfeast Dark Fantasy Cookies,Snacks,0.6,0.4
+1161,Bikaji Bhujia Sev,Snacks,0.6,0.5
+1162,Uncle Chipps Spicy Treat,Snacks,0.55,0.4
+1163,Britannia Marie Gold Biscuits,Snacks,0.54,0.35
+1164,Haldiram's Moong Dal Namkeen,Snacks,0.54,0.5
+1165,Coca-Cola 750ml,Beverages,0.47,0.9
+1166,Pepsi 750ml,Beverages,0.53,0.9
+1167,Sprite 750ml,Beverages,0.49,0.9
+1168,Real Fruit Juice Mixed 1L,Beverages,0.58,1.1
+1169,Tropicana Orange Juice 1L,Beverages,0.53,1.05
+1170,Bisleri Packaged Water 1L,Beverages,0.57,1.0
+1171,Nescafe Classic Coffee 100g,Beverages,0.55,0.35
+1172,Tata Tea Premium 1kg,Beverages,0.58,0.9
+1173,Red Bull Energy Drink,Beverages,0.52,0.5
+1174,Paper Boat Aamras,Beverages,0.54,0.6
+1175,Kissan Fresh Lime Juice,Beverages,0.53,0.6
+1176,Amul Kool Chocolate Milk,Beverages,0.58,0.6
+1177,Sting Energy Drink,Beverages,0.45,0.45
+1178,Frooti Mango Drink 600ml,Beverages,0.52,0.55
+1179,Colgate Toothpaste 200g,Personal Care,0.49,0.55
+1180,Dove Soap Bar,Personal Care,0.43,0.4
+1181,Head & Shoulders Shampoo,Personal Care,0.44,0.85
+1182,Gillette Shaving Razor,Personal Care,0.43,0.4
+1183,Nivea Body Lotion,Personal Care,0.45,0.7
+1184,Pantene Conditioner,Personal Care,0.5,0.85
+1185,Sensodyne Toothpaste,Personal Care,0.56,0.55
+1186,Lifebuoy Handwash 200ml,Personal Care,0.52,0.75
+1187,Old Spice Deodorant,Personal Care,0.5,0.6
+1188,Dabur Red Toothpaste,Personal Care,0.55,0.55
+1189,Parachute Coconut Hair Oil,Personal Care,0.54,0.8
+1190,Whisper Sanitary Pads,Personal Care,0.59,0.7
+1191,Himalaya Face Wash 100ml,Personal Care,0.44,0.4
+1192,Patanjali Aloe Vera Gel,Personal Care,0.43,0.55
+1193,Vim Dishwash Gel 500ml,Cleaning Supplies,0.47,0.8
+1194,Surf Excel Detergent Powder 1kg,Cleaning Supplies,0.49,1.05
+1195,Harpic Toilet Cleaner 500ml,Cleaning Supplies,0.54,0.75
+1196,Lizol Floor Cleaner 1L,Cleaning Supplies,0.55,0.85
+1197,Colin Glass Cleaner 500ml,Cleaning Supplies,0.5,0.6
+1198,Scotch-Brite Scrub Pad,Cleaning Supplies,0.45,0.3
+1199,Ariel Detergent Powder 1kg,Cleaning Supplies,0.54,1.05
+1200,Domex Disinfectant Floor Cleaner,Cleaning Supplies,0.54,0.85
+1201,Exo Dishwash Bar,Cleaning Supplies,0.44,0.35
+1202,Good Knight Mosquito Repellent,Cleaning Supplies,0.51,0.4
+1203,Odonil Air Freshener Block,Cleaning Supplies,0.52,0.35
+1204,Vim Bar Dishwash Soap,Cleaning Supplies,0.52,0.35
+1205,Aluminium Foil Roll,Household Essentials,0.45,0.4
+1206,Garbage Bags Pack of 30,Household Essentials,0.48,0.45
+1207,Tissue Paper Box,Household Essentials,0.41,0.35
+1208,Candles Pack of 6,Household Essentials,0.41,0.5
+1209,Matchbox Pack of 10,Household Essentials,0.38,0.25
+1210,LED Bulb 9W,Household Essentials,0.45,0.35
+1211,Plastic Storage Containers Set,Household Essentials,0.45,1.0
+1212,Cling Wrap Roll,Household Essentials,0.4,0.4
+1213,Paper Napkins Pack,Household Essentials,0.42,0.35
+1214,Air Freshener Spray,Household Essentials,0.5,0.55
+1215,Steel Wool Scrubber Pack,Household Essentials,0.43,0.35
+1216,Disposable Paper Cups Pack,Household Essentials,0.39,0.4
+1217,Pedigree Adult Dog Food 3kg,Pet Care,0.51,2.1
+1218,Whiskas Cat Food 1.2kg,Pet Care,0.52,1.1
+1219,Pedigree Puppy Food 1kg,Pet Care,0.6,0.9
+1220,Meow Mix Cat Treats,Pet Care,0.53,0.4
+1221,Dog Chew Toy,Pet Care,0.38,0.4
+1222,Cat Litter 5kg,Pet Care,0.56,3.2
+1223,Bird Seed Mix 500g,Pet Care,0.53,0.55
+1224,Pet Shampoo 200ml,Pet Care,0.47,0.6
+1225,Drools Dog Food 3kg,Pet Care,0.54,2.1
+1226,Fish Tank Food Flakes,Pet Care,0.44,0.3
+1227,Farmina Cat Food 1.5kg,Pet Care,0.52,1.3
+1228,Dog Leash and Collar Set,Pet Care,0.35,0.4
+1229,USB Type-C Charging Cable,Electronics & Accessories,0.4,0.25
+1230,Wired Earphones with Mic,Electronics & Accessories,0.35,0.25
+1231,Mobile Power Bank 10000mAh,Electronics & Accessories,0.38,0.45
+1232,AA Batteries Pack of 4,Electronics & Accessories,0.44,0.35
+1233,Bluetooth Wireless Earbuds,Electronics & Accessories,0.35,0.3
+1234,Mobile Screen Protector,Electronics & Accessories,0.36,0.25
+1235,Phone Charger Adapter 20W,Electronics & Accessories,0.4,0.35
+1236,HDMI Cable 1.5m,Electronics & Accessories,0.3,0.3
+1237,Extension Board 4 Socket,Electronics & Accessories,0.37,0.55
+1238,Wireless Mouse,Electronics & Accessories,0.32,0.35
+1239,Type-C to Type-C Cable,Electronics & Accessories,0.32,0.25
+1240,Classmate Notebook 200 Pages,Stationery,0.41,0.35
+1241,Reynolds Ball Pen Pack of 5,Stationery,0.36,0.35
+1242,Camlin Pencil Box Set,Stationery,0.36,0.4
+1243,A4 Printer Paper Ream,Stationery,0.38,1.2
+1244,Sticky Notes Pack,Stationery,0.4,0.25
+1245,Stapler with Pins,Stationery,0.38,0.35
+1246,Highlighter Set of 5,Stationery,0.36,0.3
+1247,Geometry Box,Stationery,0.39,0.45
+1248,Whiteboard Marker Set,Stationery,0.41,0.35
+1249,File Folder Pack of 10,Stationery,0.39,0.5
+1250,Gel Pen Set of 10,Stationery,0.41,0.35
