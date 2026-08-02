@@ -13,3 +13,4 @@ contextily
 streamlit
 folium
 pulp
+plotly
