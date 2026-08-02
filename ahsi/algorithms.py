@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from ahsi.helpers import *
 
 # =============================================================
@@ -222,6 +223,29 @@ def refine_boundaries(
             for cell in cells
         )
 
+    history = []
+
+    target_workload = (
+        sum(zone_workloads.values())
+        / len(zone_workloads)
+    )
+    
+    # initial configuration
+    workloads = list(zone_workloads.values())
+
+    history = [{
+        "iteration": 0,
+        "std_deviation": np.std(workloads),
+        "max_deviation": max(
+            abs(w - target_workload)
+            for w in workloads
+        ),
+        "mean_deviation": np.mean([
+            abs(w - target_workload)
+            for w in workloads
+        ])
+    }]
+
     improved = True
 
     while improved:
@@ -229,6 +253,7 @@ def refine_boundaries(
         improved = False
 
         best_transfer = None
+
         best_score = max(zone_workloads.values()) - min(zone_workloads.values())
 
         boundary_cells = find_boundary_cells(zones)
@@ -285,6 +310,21 @@ def refine_boundaries(
         zone_workloads[source_zone] -= workload_map[cell]
         zone_workloads[destination_zone] += workload_map[cell]
 
+        workloads = list(zone_workloads.values())
+    
+        history.append({
+            "iteration": len(history),
+            "std_deviation": np.std(workloads),
+            "max_deviation": max(
+                abs(w - target_workload)
+                for w in workloads
+            ),
+            "mean_deviation": np.mean([
+                abs(w - target_workload)
+                for w in workloads
+            ])
+        })
+
         improved = True
 
     records = []
@@ -298,4 +338,8 @@ def refine_boundaries(
                 "zone_id": zone_id
             })
 
-    return pd.DataFrame(records)
+    zone_df = pd.DataFrame(records)
+
+    history_df = pd.DataFrame(history)
+
+    return zone_df, history_df

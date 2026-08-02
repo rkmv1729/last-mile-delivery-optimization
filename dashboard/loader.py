@@ -30,6 +30,11 @@ def load_data():
                 DATA_DIR / "zone_mapping.parquet"
             ),
 
+        "ahsi_history_df":
+            pd.read_parquet(
+                DATA_DIR / "ahsi_algorithm.parquet"
+            ),
+
         "zone_forecast_df":
             pd.read_parquet(
                 DATA_DIR / "zone_forecast.parquet"

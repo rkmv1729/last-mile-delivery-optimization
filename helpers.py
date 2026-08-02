@@ -483,6 +483,11 @@ def build_zone_forecast(
         / zone_forecast_df["historical_mean"]
     )
 
+    # Preserve the raw opportunity ratio before normalization
+    zone_forecast_df["forecast_ratio"] = (
+        zone_forecast_df["forecast_opportunity"]
+    )
+
     fo = zone_forecast_df["forecast_opportunity"]
 
     if fo.max() > fo.min():
@@ -493,12 +498,18 @@ def build_zone_forecast(
     else:
         zone_forecast_df["forecast_opportunity"] = 0.5
 
+    zone_forecast_df["demand_change"] = (
+        (zone_forecast_df["forecast_ratio"] - 1.0)
+        * 100
+    ).round(2)
+
     return zone_forecast_df[
         [
             "zone_id",
             "shift",
             "forecast_demand",
             "forecast_opportunity",
+            "demand_change"
         ]
     ]
 

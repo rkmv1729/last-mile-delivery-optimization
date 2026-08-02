@@ -41,9 +41,9 @@ def run_ahsi(
         seed_df=seed_df,
     )
 
-    zone_mapping_df = refine_boundaries(
+    zone_mapping_df, history_df = refine_boundaries(
         h3_demand_df=h3_demand_df,
         zone_df=zone_df,
     )
 
-    return zone_mapping_df
+    return zone_mapping_df, history_df

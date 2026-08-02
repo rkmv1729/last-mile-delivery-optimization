@@ -91,6 +91,7 @@ if page == "Home":
     show_home(data)
 
 elif page == "AHSI":
+    print(data.keys())
     show_ahsi(data)
 
 elif page == "Demand Forecast":

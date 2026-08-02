@@ -1,5 +1,5 @@
 import random
-
+import streamlit as st
 import h3
 import pandas as pd
 
@@ -37,6 +37,48 @@ def build_color_palette(
 
     return palette
 
+def build_heat_color(
+    value: float,
+    minimum: float,
+    maximum: float,
+):
+    """
+    Continuous Blue → Green → Yellow → Red color scale.
+    """
+
+    if maximum == minimum:
+        t = 0.5
+    else:
+        t = (value - minimum) / (maximum - minimum)
+
+    t = max(0.0, min(1.0, t))
+
+    if t < 0.33:
+
+        p = t / 0.33
+
+        r = 0
+        g = int(255 * p)
+        b = 255
+
+    elif t < 0.66:
+
+        p = (t - 0.33) / 0.33
+
+        r = int(255 * p)
+        g = 255
+        b = int(255 * (1 - p))
+
+    else:
+
+        p = (t - 0.66) / 0.34
+
+        r = 255
+        g = int(255 * (1 - p))
+        b = 0
+
+    return [r, g, b, 180]
+
 
 
 
@@ -66,9 +108,24 @@ def build_h3_polygons(
             - color
     """
 
-    palette = build_color_palette(
-        dataframe[color_column].unique()
+    numeric_heatmap = (
+        dataframe[color_column]
+        .dtype.kind
+        in "if"
     )
+
+    if numeric_heatmap:
+
+        minimum = dataframe[color_column].min()
+
+        # Prevent one hotspot from compressing all colors
+        maximum = dataframe[color_column].quantile(0.95)
+
+    else:
+
+        palette = build_color_palette(
+            dataframe[color_column].unique()
+        )
 
     polygon_rows = []
 
@@ -87,9 +144,19 @@ def build_h3_polygons(
 
         record["polygon"] = polygon
 
-        record["color"] = palette[
-            record[color_column]
-        ]
+        if numeric_heatmap:
+
+            record["color"] = build_heat_color(
+                record[color_column],
+                minimum,
+                maximum,
+            )
+
+        else:
+
+            record["color"] = palette[
+                record[color_column]
+            ]
 
         polygon_rows.append(record)
 
@@ -134,8 +201,6 @@ def build_view_state(
     )
 
 
-
-import streamlit as st
 
 
 def draw_h3_map(
@@ -190,4 +255,52 @@ def draw_h3_map(
     st.pydeck_chart(
         deck,
         use_container_width=True,
+    )
+
+
+def draw_heatmap_legend(
+    minimum: float,
+    maximum: float,
+):
+    """
+    Display continuous heatmap legend.
+    """
+
+    st.markdown(
+        f"""
+        <div style="padding-top:35px;">
+
+        <b>Demand</b>
+
+        <div style="
+        height:260px;
+        width:24px;
+        background:linear-gradient(
+        to top,
+        blue,
+        green,
+        yellow,
+        red
+        );
+        border-radius:5px;
+        margin:auto;
+        ">
+        </div>
+
+        <div style="text-align:center;font-size:13px;">
+        {maximum:.1f}
+        </div>
+
+        <div style="
+        height:180px;
+        ">
+        </div>
+
+        <div style="text-align:center;font-size:13px;">
+        {minimum:.1f}
+        </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True,
     )

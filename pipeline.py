@@ -55,7 +55,7 @@ def run_pipeline(
         current_shift_df=current_shift_df
     )
 
-    zone_mapping_df = run_ahsi(
+    zone_mapping_df, history_df = run_ahsi(
         h3_demand_df=h3_demand_df,
         num_zones=NUM_ZONES,
         seed_spacing=SEED_SPACING
@@ -76,8 +76,6 @@ def run_pipeline(
         metadata=metadata,
         scaler=scaler
     )
-
-    print(cell_forecast_df.columns.to_list())
 
     cell_forecast_df = denormalize_dataframe(
         df=cell_forecast_df,
@@ -108,9 +106,6 @@ def run_pipeline(
         products_df=products_df,
         max_quantity_per_item=MAX_QTY_PER_ITEM
     )
-
-    print(type(orders_df.loc[0, "products"]))
-    print(orders_df.loc[0, "products"])
 
     orders_df = enrich_orders(
         new_orders_df=orders_df,
@@ -181,6 +176,7 @@ def run_pipeline(
 
     return {
         "zone_mapping_df": zone_mapping_df,
+        "ahsi_history_df": history_df,
         "zone_forecast_df": zone_forecast_df,
         "orders_df": orders_df,
         "selected_df": selected_df,
@@ -235,9 +231,13 @@ def main(
         model=model
     )
 
-
     results["zone_mapping_df"].to_parquet(
         DATA_DIR/"zone_mapping.parquet",
+        index=False,
+    )
+
+    results["ahsi_history_df"].to_parquet(
+        DATA_DIR/"ahsi_algorithm.parquet",
         index=False,
     )
 
@@ -249,7 +249,7 @@ def main(
     orders_to_save = serialize_object_column(
         results["orders_df"],
         column="products",
-    )
+    )                                                       
 
     orders_to_save.to_parquet(
         DATA_DIR / "orders.parquet",

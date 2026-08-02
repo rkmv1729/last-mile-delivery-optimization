@@ -8,29 +8,9 @@ def prepare_zone_statistics(
 ) -> pd.DataFrame:
     """
     Compute summary statistics for each operational zone.
-
-    Parameters
-    ----------
-    zone_mapping_df
-        Zone mapping containing:
-            - h3_cell_8
-            - zone_id
-
-    orders_df
-        Orders dataframe containing:
-            - order_id
-            - h3_cell_8
-
-    Returns
-    -------
-    pd.DataFrame
-        Columns:
-            - zone_id
-            - cells
-            - orders
     """
 
-    return (
+    zone_statistics = (
         orders_df
         .groupby(
             "zone_id",
@@ -42,6 +22,21 @@ def prepare_zone_statistics(
         )
         .sort_values("zone_id")
     )
+
+    target = zone_statistics["orders"].mean()
+
+    zone_statistics["target"] = round(target, 2)
+
+    zone_statistics["deviation"] = (
+        zone_statistics["orders"] - target
+    ).round(2)
+
+    zone_statistics["orders_per_cell"] = (
+        zone_statistics["orders"]
+        / zone_statistics["cells"]
+    ).round(2)
+
+    return zone_statistics
 
 
 
@@ -58,57 +53,97 @@ def draw_zone_statistics(
         orders_df,
     )
 
-    st.subheader("Zone Statistics")
+    st.subheader("Operational Zone Statistics")
 
     st.dataframe(
         zone_statistics,
         hide_index=True,
         use_container_width=True,
+        column_config={
+            "zone_id": "Zone",
+            "cells": st.column_config.NumberColumn(
+                "H3 Cells",
+                format="%d",
+            ),
+            "orders": st.column_config.NumberColumn(
+                "Orders",
+                format="%d",
+            ),
+            "target": st.column_config.NumberColumn(
+                "Target",
+                format="%.2f",
+            ),
+            "deviation": st.column_config.NumberColumn(
+                "Deviation",
+                format="%.2f",
+            ),
+            "orders_per_cell": st.column_config.NumberColumn(
+                "Orders / Cell",
+                format="%.2f",
+            ),
+        },
     )
 
 
 def prepare_forecast_table(
     zone_forecast_df: pd.DataFrame,
+    zone_mapping_df: pd.DataFrame
 ) -> pd.DataFrame:
-    """
-    Prepare zone-level demand forecast table.
+    cells = (
+    zone_mapping_df
+    .groupby(
+        "zone_id",
+        as_index=False,
+    )
+    .agg(
+        cells=("h3_cell_8", "nunique")
+    )
+    )
 
-    Parameters
-    ----------
-    zone_forecast_df
-        Forecast dataframe containing:
-            - zone_id
-            - forecast_demand
-            - forecast_opportunity
+    forecast_table = (
+        zone_forecast_df
+        .merge(
+            cells,
+            on="zone_id",
+        )
+    )
 
-    Returns
-    -------
-    pd.DataFrame
-        Sorted forecast table.
-    """
+    forecast_table["density"] = (
+        forecast_table["forecast_demand"]
+        / forecast_table["cells"]
+    ).round(2)
+
+    forecast_table["demand_change"] = (
+        (
+            forecast_table["forecast_opportunity"] - 1
+        )
+        * 100
+    ).round(2)
 
     return (
-        zone_forecast_df[
+        forecast_table[
             [
                 "zone_id",
+                "cells",
                 "forecast_demand",
-                "forecast_opportunity",
+                "density",
+                "demand_change",
             ]
         ]
-        .sort_values("zone_id")
-        .reset_index(drop=True)
     )
 
 
 def draw_forecast_table(
     zone_forecast_df: pd.DataFrame,
+    zone_mapping_df: pd.DataFrame
 ):
     """
     Display zone-level demand forecast table.
     """
 
     forecast_table = prepare_forecast_table(
-        zone_forecast_df
+        zone_forecast_df,
+        zone_mapping_df
     )
 
     st.subheader("Forecast Summary")
